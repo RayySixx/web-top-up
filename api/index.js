@@ -14,10 +14,10 @@ const ATLANTIC_BASE_URL = 'https://atlantich2h.com';
 const API_KEY = process.env.ATLANTIC_API_KEY;
 
 const config = {
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'Atlantic-Vercel/2.0' }
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'Atlantic-Vercel/3.0' }
 };
 
-// 1. Ambil Data
+// 1. Ambil Semua Data
 app.get('/api/services', async (req, res) => {
     try {
         const response = await axios.post(`${ATLANTIC_BASE_URL}/layanan/price_list`, 
@@ -28,23 +28,17 @@ app.get('/api/services', async (req, res) => {
     }
 });
 
-// 2. Create Payment (Matematika Profit Bersih 500)
+// 2. Buat QRIS (Profit Bersih 500)
 app.post('/api/create-payment', async (req, res) => {
     const { service_code, target, price_original } = req.body;
     
-    // RUMUS:
-    // Biaya Layanan QRIS Instant Atlantic = 1.4% + Rp 200
-    // Target Profit Bersih = Rp 500
-    // Rumus Harga Jual = (Modal + 500 + 200) / (1 - 0.014)
-    
+    // RUMUS: (Modal + 500 Profit + 200 FeeFix) / (1 - 1.4% FeeMDR)
     const modal = parseInt(price_original);
-    const profitBersih = 500;
-    const feeFix = 200; // Biaya fix QRIS
-    const feePersen = 0.014; // 1.4%
+    const profit = 500;
+    const feeFix = 200;
+    const mdr = 0.014;
 
-    // Pembulatan ke atas biar aman
-    const nominalBayar = Math.ceil((modal + profitBersih + feeFix) / (1 - feePersen));
-    
+    const nominalBayar = Math.ceil((modal + profit + feeFix) / (1 - mdr));
     const reff_id = `PAY-${Date.now()}`;
 
     try {
@@ -61,8 +55,7 @@ app.post('/api/create-payment', async (req, res) => {
                     deposit_id: depoRes.data.data.id,
                     qr_image: depoRes.data.data.qr_image,
                     amount: nominalBayar,
-                    // Kirim balik data target & code ke frontend (Stateless)
-                    meta: { code: service_code, target: target }
+                    meta: { code: service_code, target: target } // Simpan data target buat eksekusi nanti
                 }
             });
         } else {
@@ -82,7 +75,7 @@ app.post('/api/check-status', async (req, res) => {
         const statusRes = await axios.post(`${ATLANTIC_BASE_URL}/deposit/status`,
             qs.stringify({ api_key: API_KEY, id: deposit_id }), config);
         
-        let status = statusRes.data.data.status; // pending, processing, success
+        let status = statusRes.data.data.status;
 
         // Auto Instant Claim
         if (status === 'processing') {
@@ -95,7 +88,7 @@ app.post('/api/check-status', async (req, res) => {
 
         // Jika Sukses -> Beli Produk
         if (status === 'success') {
-            const trxReff = `TRX-${deposit_id}`; // Reff ID unik per deposit
+            const trxReff = `TRX-${deposit_id}`;
             const buyRes = await axios.post(`${ATLANTIC_BASE_URL}/transaksi/create`,
                 qs.stringify({
                     api_key: API_KEY, code: meta.code, target: meta.target, reff_id: trxReff
@@ -104,9 +97,8 @@ app.post('/api/check-status', async (req, res) => {
             if (buyRes.data.status) {
                 res.json({ status: true, state: 'success', sn: buyRes.data.data.sn });
             } else {
-                // Handle duplicate entry (artinya sudah sukses sebelumnya)
                 if(buyRes.data.message.includes('uplicate') || buyRes.data.message.includes('sudah ada')) {
-                    res.json({ status: true, state: 'success', sn: 'Lihat Riwayat' });
+                    res.json({ status: true, state: 'success', sn: 'Cek Riwayat' });
                 } else {
                     res.json({ status: true, state: 'failed', message: buyRes.data.message });
                 }
