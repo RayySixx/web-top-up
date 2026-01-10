@@ -14,16 +14,23 @@ const ATLANTIC_BASE_URL = 'https://atlantich2h.com';
 const API_KEY = process.env.ATLANTIC_API_KEY;
 
 const config = {
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'Atlantic-Vercel/5.0' }
+    headers: { 
+        'Content-Type': 'application/x-www-form-urlencoded', 
+        'User-Agent': 'Atlantic-Vercel/5.0' 
+    }
 };
 
-// 1. Ambil Data
+// 1. Ambil Data (Proxy ke Atlantic)
 app.get('/api/services', async (req, res) => {
     try {
+        // Request ke Atlantic
         const response = await axios.post(`${ATLANTIC_BASE_URL}/layanan/price_list`, 
             qs.stringify({ api_key: API_KEY, type: 'prabayar' }), config);
+        
+        // Langsung kirim full response (termasuk img_url) ke frontend
         res.json(response.data);
     } catch (error) {
+        console.error("Error fetching services:", error.message);
         res.status(500).json({ status: false, message: "Gagal ambil data" });
     }
 });
@@ -32,7 +39,7 @@ app.get('/api/services', async (req, res) => {
 app.post('/api/create-payment', async (req, res) => {
     const { service_code, target, price_original } = req.body;
     
-    // Profit Bersih 500 (Rumus Fee Instant)
+    // Profit margin logic
     const modal = parseInt(price_original);
     const nominalBayar = Math.ceil((modal + 700) / 0.986);
     const reff_id = `PAY-${Date.now()}`;
@@ -71,11 +78,13 @@ app.post('/api/check-status', async (req, res) => {
         
         let status = statusRes.data.data.status;
 
+        // Auto process jika processing
         if (status === 'processing') {
             try {
-                const instant = await axios.post(`${ATLANTIC_BASE_URL}/deposit/instant`,
+                await axios.post(`${ATLANTIC_BASE_URL}/deposit/instant`,
                     qs.stringify({ api_key: API_KEY, id: deposit_id, action: 'true' }), config);
-                if(instant.data.status) status = 'success';
+                // Kita anggap success dulu agar lanjut cek transaksi, atau tunggu hit berikutnya
+                status = 'success'; 
             } catch (e) {}
         }
 
@@ -90,7 +99,7 @@ app.post('/api/check-status', async (req, res) => {
                 res.json({ status: true, state: 'success', sn: buyRes.data.data.sn });
             } else {
                 if(buyRes.data.message.includes('uplicate') || buyRes.data.message.includes('sudah ada')) {
-                    res.json({ status: true, state: 'success', sn: 'Cek Riwayat' });
+                    res.json({ status: true, state: 'success', sn: 'Sedang Diproses / Cek History' });
                 } else {
                     res.json({ status: true, state: 'failed', message: buyRes.data.message });
                 }
@@ -105,17 +114,14 @@ app.post('/api/check-status', async (req, res) => {
     }
 });
 
-// 4. BATALKAN PEMBAYARAN (Endpoint Baru)
+// 4. Cancel Payment
 app.post('/api/cancel-payment', async (req, res) => {
     const { deposit_id } = req.body;
     try {
-        // Panggil API Atlantic untuk Cancel Deposit
         const response = await axios.post(`${ATLANTIC_BASE_URL}/deposit/cancel`,
             qs.stringify({ api_key: API_KEY, id: deposit_id }), config);
-        
         res.json(response.data);
     } catch (error) {
-        // Tetap return true biar UI frontend ketutup
         res.json({ status: true, message: "Force closed locally" });
     }
 });
