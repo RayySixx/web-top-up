@@ -3,138 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Store Topup</title>
+    <title>FastStore</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root { --primary: #2563eb; --bg: #f8fafc; }
         body { background-color: var(--bg); font-family: sans-serif; padding-bottom: 80px; }
-
         .header { background: var(--primary); color: white; padding: 20px 20px 60px 20px; border-radius: 0 0 25px 25px; }
+        .main-card { background: white; border-radius: 20px; margin: -40px 15px 20px 15px; padding: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
         
-        .main-card {
-            background: white; border-radius: 20px; margin: -40px 15px 20px 15px;
-            padding: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-        }
-
-        /* Menu Tabs */
+        /* Nav Pills */
+        .nav-scroller { overflow-x: auto; white-space: nowrap; scrollbar-width: none; padding-bottom: 5px; }
         .nav-pills .nav-link { 
-            color: #64748b; font-size: 11px; font-weight: 600; 
-            border: 1px solid #f1f5f9; margin-right: 5px; border-radius: 10px;
+            color: #64748b; font-size: 11px; font-weight: 600; border: 1px solid #f1f5f9; 
+            margin-right: 8px; border-radius: 12px; padding: 10px 15px; min-width: 80px;
         }
         .nav-pills .nav-link.active { background-color: var(--primary); color: white; border-color: var(--primary); }
-        .nav-pills .nav-link i { display: block; font-size: 18px; margin-bottom: 4px; }
+        .nav-pills .nav-link i { display: block; font-size: 20px; margin-bottom: 5px; }
 
-        /* Input Modern */
-        .form-group { margin-bottom: 15px; }
+        /* Inputs */
+        .input-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 15px; display: flex; align-items: center; }
+        .input-box input, .input-box select { border: none; background: transparent; width: 100%; outline: none; font-weight: 600; font-size: 14px; }
         .form-label { font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 5px; display: block; }
-        .input-box {
-            background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 12px;
-            padding: 10px 15px; display: flex; align-items: center;
-        }
-        .input-box input, .input-box select {
-            border: none; background: transparent; width: 100%; outline: none; font-weight: 600; font-size: 14px;
-        }
 
-        /* List Produk */
+        /* Product List */
         .prod-item {
             background: white; padding: 15px; border-radius: 14px; margin-bottom: 10px;
-            border: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;
-            cursor: pointer; transition: 0.2s;
+            border: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
         }
-        .prod-item:hover { border-color: var(--primary); background: #eff6ff; }
         .prod-name { font-size: 13px; font-weight: 600; color: #1e293b; }
         .prod-price { font-size: 14px; font-weight: 700; color: var(--primary); }
+        .prod-cat { font-size: 10px; color: #94a3b8; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h4 class="fw-bold m-0">⚡ FastStore</h4>
-    <p class="small opacity-75 m-0">Topup Murah & Otomatis</p>
+    <div class="d-flex justify-content-between align-items-center">
+        <div><h4 class="fw-bold m-0">⚡ FastStore</h4><p class="small opacity-75 m-0">Topup Game & Premium</p></div>
+        <div id="loadingBadge" class="badge bg-white text-primary"><i class="fas fa-sync fa-spin"></i> Loading...</div>
+    </div>
 </div>
 
 <div class="main-card">
-    
-    <ul class="nav nav-pills nav-fill mb-4">
-        <li class="nav-item" onclick="setCat('Games')">
-            <a class="nav-link active" href="#"><i class="fas fa-gamepad"></i>Games</a>
-        </li>
-        <li class="nav-item" onclick="setCat('Pulsa')">
-            <a class="nav-link" href="#"><i class="fas fa-mobile-alt"></i>Pulsa</a>
-        </li>
-        <li class="nav-item" onclick="setCat('Data')">
-            <a class="nav-link" href="#"><i class="fas fa-wifi"></i>Data</a>
-        </li>
-        <li class="nav-item" onclick="setCat('PLN')">
-            <a class="nav-link" href="#"><i class="fas fa-bolt"></i>PLN</a>
-        </li>
-    </ul>
-
-    <div class="form-group">
-        <label class="form-label" id="lblTarget">NOMOR / ID TUJUAN</label>
-        
-        <div id="boxSingle" class="input-box">
-            <input type="tel" id="valSingle" placeholder="Masukkan Nomor / ID">
-        </div>
-
-        <div id="boxDual" class="d-none row g-2">
-            <div class="col-7">
-                <div class="input-box">
-                    <input type="tel" id="valId" placeholder="User ID (cth: 123456)">
-                </div>
-            </div>
-            <div class="col-5">
-                <div class="input-box">
-                    <input type="tel" id="valZone" placeholder="Zone (cth: 2021)">
-                </div>
-            </div>
-        </div>
-        <small class="text-muted d-block mt-1 ms-1" style="font-size: 10px;" id="txtHint">*Pastikan nomor benar</small>
+    <div class="nav-scroller mb-4">
+        <ul class="nav nav-pills">
+            <li class="nav-item" onclick="setCat('Games', this)"><a class="nav-link active" href="#"><i class="fas fa-gamepad"></i>Games</a></li>
+            <li class="nav-item" onclick="setCat('Pulsa', this)"><a class="nav-link" href="#"><i class="fas fa-mobile-alt"></i>Pulsa</a></li>
+            <li class="nav-item" onclick="setCat('Data', this)"><a class="nav-link" href="#"><i class="fas fa-wifi"></i>Data</a></li>
+            <li class="nav-item" onclick="setCat('Apps', this)"><a class="nav-link" href="#"><i class="fas fa-crown text-warning"></i>Apps</a></li>
+            <li class="nav-item" onclick="setCat('PLN', this)"><a class="nav-link" href="#"><i class="fas fa-bolt"></i>PLN</a></li>
+        </ul>
     </div>
 
-    <div class="form-group">
-        <label class="form-label">PILIH PROVIDER</label>
-        <div class="input-box">
-            <select id="selProv" onchange="renderItems()">
-                <option value="">Pilih...</option>
-            </select>
+    <div class="mb-3">
+        <label class="form-label" id="lblTarget">NOMOR / ID TUJUAN</label>
+        <div id="boxSingle" class="input-box"><input type="tel" id="valSingle" placeholder="Nomor HP / ID User"></div>
+        <div id="boxDual" class="d-none row g-2">
+            <div class="col-7"><div class="input-box"><input type="tel" id="valId" placeholder="User ID"></div></div>
+            <div class="col-5"><div class="input-box"><input type="tel" id="valZone" placeholder="Zone"></div></div>
         </div>
+        <small class="text-muted d-block mt-1 ms-1" style="font-size: 10px;">*Pastikan nomor benar</small>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">PILIH PROVIDER</label>
+        <div class="input-box"><select id="selProv" onchange="renderItems()"><option value="">Menunggu Data...</option></select></div>
     </div>
 
     <div id="areaList" class="mt-4">
-        <div class="text-center py-5 text-muted opacity-50">
-            <i class="fas fa-box-open fa-2x mb-2"></i>
-            <p class="small">Pilih provider dulu</p>
-        </div>
+        <div class="text-center py-5 text-muted opacity-50"><i class="fas fa-box-open fa-2x mb-2"></i><p class="small">Pilih provider diatas</p></div>
     </div>
 </div>
 
 <div class="modal fade" id="modalTrx" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-3 text-center">
-            <div class="modal-header border-0 p-0"><button class="btn-close ms-auto" onclick="clsModal()"></button></div>
-            <div class="modal-body p-0">
+        <div class="modal-content p-3 text-center border-0 shadow-lg" style="border-radius: 24px;">
+            <div class="modal-header border-0 p-0"></div> <div class="modal-body p-2">
                 
                 <div id="v-qris" class="d-none">
-                    <h5 class="fw-bold">Scan QRIS</h5>
-                    <p class="small text-muted mb-0">Total Bayar</p>
+                    <h5 class="fw-bold mb-1">Scan QRIS</h5>
+                    <p class="small text-muted mb-0">Total Bayar (Instant)</p>
                     <h2 class="text-primary fw-bold" id="txtPrice">Rp 0</h2>
-                    <div class="my-3 border rounded p-2 d-inline-block">
+                    
+                    <div class="my-3 border rounded-4 p-2 d-inline-block bg-white shadow-sm">
                         <img id="imgQr" src="" class="img-fluid rounded" style="max-height: 250px;">
                     </div>
-                    <div class="alert alert-warning small py-1 fw-bold">
+                    
+                    <div class="alert alert-warning small py-2 fw-bold rounded-pill">
                         <div class="spinner-grow spinner-grow-sm me-1"></div> Menunggu Pembayaran...
                     </div>
+
+                    <button class="btn btn-outline-danger w-100 rounded-pill mt-2" onclick="cancelPay()">
+                        <i class="fas fa-times-circle me-1"></i> Batalkan Transaksi
+                    </button>
                 </div>
 
                 <div id="v-succ" class="d-none py-3">
                     <i class="fas fa-check-circle text-success fa-4x mb-3"></i>
                     <h4 class="fw-bold">Berhasil!</h4>
                     <p class="small text-muted">Produk sedang dikirim.</p>
-                    <div class="bg-light p-2 rounded text-start"><small>SN: <b id="txtSn">-</b></small></div>
-                    <button class="btn btn-primary w-100 rounded-pill mt-3" onclick="clsModal()">OK</button>
+                    <div class="bg-light p-3 rounded text-start border"><small>SN: <b id="txtSn">-</b></small></div>
+                    <button class="btn btn-primary w-100 rounded-pill mt-3" onclick="clsModal()">Tutup</button>
                 </div>
 
                 <div id="v-fail" class="d-none py-3">
@@ -157,6 +128,7 @@
     let db = [];
     let cat = 'Games';
     let timer;
+    let currId = null; // Menyimpan ID deposit saat ini
     let metaData = {};
 
     window.onload = async () => {
@@ -164,96 +136,82 @@
             const res = await axios.get('/api/services');
             if(res.data.status) {
                 db = res.data.data;
+                document.getElementById('loadingBadge').style.display = 'none';
                 popProv();
             }
-        } catch(e) {}
+        } catch(e) {
+            document.getElementById('loadingBadge').innerText = 'Error Koneksi';
+            document.getElementById('loadingBadge').classList.replace('text-primary', 'text-danger');
+        }
     };
 
-    function setCat(c) {
+    function setCat(c, el) {
         cat = c;
-        document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
-        event.target.closest('.nav-link').classList.add('active');
+        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+        if(el) el.querySelector('.nav-link').classList.add('active');
         
         popProv();
         document.getElementById('areaList').innerHTML = '';
-        
-        // Reset Input State
         document.getElementById('boxSingle').classList.remove('d-none');
         document.getElementById('boxDual').classList.add('d-none');
-        document.getElementById('txtHint').innerText = '*Pastikan data benar';
     }
 
-    // Logic Populate Provider (Lebih Robust)
     function popProv() {
         const sel = document.getElementById('selProv');
-        sel.innerHTML = '<option value="">Pilih...</option>';
+        sel.innerHTML = '<option value="">Pilih Provider...</option>';
         const ps = new Set();
 
         db.forEach(i => {
             if(i.status !== 'available') return;
-            // Normalisasi data biar gak error
             const c = (i.category || '').toLowerCase();
             const n = (i.name || '').toLowerCase();
-            const t = (i.type || '').toLowerCase();
             const brand = i.brand || i.provider || 'Others';
             
             let m = false;
-
-            if(cat==='Games' && (c.includes('games') || t.includes('games') || c.includes('voucher'))) m=true;
+            if(cat==='Games' && (c.includes('games') || i.type === 'game' || c.includes('voucher'))) m=true;
             else if(cat==='Pulsa' && c.includes('pulsa')) m=true;
             else if(cat==='Data' && (c.includes('data') || c.includes('kuota') || c.includes('internet'))) m=true;
             else if(cat==='PLN' && c.includes('pln')) m=true;
-
+            else if(cat==='Apps') {
+                if(c.includes('streaming') || c.includes('premium') || n.includes('netflix') || n.includes('spotify') || n.includes('vidio') || n.includes('youtube')) m=true;
+            }
             if(m) ps.add(brand);
         });
 
-        // Sortir A-Z biar rapi
-        Array.from(ps).sort().forEach(p => {
-            sel.innerHTML += `<option value="${p}">${p}</option>`;
-        });
+        const sorted = Array.from(ps).sort();
+        if(sorted.length === 0) sel.innerHTML = '<option value="">Tidak ada produk</option>';
+        else sorted.forEach(p => sel.innerHTML += `<option value="${p}">${p}</option>`);
     }
 
-    // Render & Input Detector
-    function renderUI() {
+    function renderItems() {
         const prov = document.getElementById('selProv').value;
         const div = document.getElementById('areaList');
         div.innerHTML = '';
         if(!prov) return;
 
-        // DETEKSI MLBB
         const isML = prov.toLowerCase().includes('mobile legends') || prov.toLowerCase().includes('mlbb');
-        
         if(isML) {
             document.getElementById('boxSingle').classList.add('d-none');
             document.getElementById('boxDual').classList.remove('d-none');
             document.getElementById('lblTarget').innerText = 'ID GAME & ZONE';
-            document.getElementById('txtHint').innerText = '*Masukkan User ID dan Zone ID';
         } else {
             document.getElementById('boxDual').classList.add('d-none');
             document.getElementById('boxSingle').classList.remove('d-none');
             document.getElementById('lblTarget').innerText = 'NOMOR / ID TUJUAN';
-            document.getElementById('txtHint').innerText = '*Pastikan nomor tujuan benar';
         }
 
-        // FILTER PRODUK (Loose Filter biar semua masuk)
-        const list = db.filter(i => {
-            const b = i.brand || i.provider;
-            return b === prov && i.status === 'available';
-        });
-        
+        const list = db.filter(i => (i.brand === prov || i.provider === prov) && i.status === 'available');
         list.sort((a,b) => parseInt(a.price) - parseInt(b.price));
 
         list.forEach(i => {
-            // KALKULASI DISPLAY HARGA
             const modal = parseInt(i.price);
-            // (Modal + 500 + 200) / 0.986
             const sell = Math.ceil((modal + 700) / 0.986);
             
             div.innerHTML += `
             <div class="prod-item" onclick="pay('${i.code}', '${i.price}')">
                 <div style="flex:1">
                     <div class="prod-name">${i.name}</div>
-                    <div class="text-muted small" style="font-size:10px">${i.code}</div>
+                    <div class="prod-cat">${i.category}</div>
                 </div>
                 <div class="prod-price">Rp ${sell.toLocaleString('id-ID')}</div>
             </div>`;
@@ -264,13 +222,10 @@
         const prov = document.getElementById('selProv').value.toLowerCase();
         let target = '';
 
-        // LOGIC GABUNG FORMAT TARGET
         if(prov.includes('mobile legends') || prov.includes('mlbb')) {
             const id = document.getElementById('valId').value;
             const zone = document.getElementById('valZone').value;
             if(!id || !zone) return Swal.fire('Eits', 'Isi ID dan Zone dulu!', 'warning');
-            
-            // FORMAT: ZONEID|USERID
             target = `${zone}|${id}`;
         } else {
             target = document.getElementById('valSingle').value;
@@ -294,6 +249,8 @@
             if(res.data.status) {
                 const d = res.data.data;
                 metaData = d.meta;
+                currId = d.deposit_id; // Simpan ID
+                
                 document.getElementById('imgQr').src = d.qr_image;
                 document.getElementById('txtPrice').innerText = 'Rp ' + d.amount.toLocaleString('id-ID');
                 document.getElementById('v-qris').classList.remove('d-none');
@@ -328,6 +285,30 @@
                 }
             } catch(e){}
         }, 3000);
+    }
+
+    // FUNGSI BATALKAN TRANSAKSI
+    async function cancelPay() {
+        if(timer) clearInterval(timer); // Stop polling
+
+        // Tutup Modal dulu biar user gak nunggu
+        const m = bootstrap.Modal.getInstance(document.getElementById('modalTrx'));
+        m.hide();
+
+        if(currId) {
+            // Request cancel ke backend (biar status di Atlantic juga cancel)
+            try {
+                await axios.post('/api/cancel-payment', { deposit_id: currId });
+            } catch(e) { console.log('Cancel sent'); }
+        }
+        
+        Swal.fire({
+            icon: 'info',
+            title: 'Dibatalkan',
+            text: 'Transaksi telah dibatalkan.',
+            timer: 1500,
+            showConfirmButton: false
+        });
     }
 
     function clsModal() {
