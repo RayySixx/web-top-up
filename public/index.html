@@ -3,492 +3,585 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RayStore-Digital</title>
+    <title>Ray Store</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --bg-main: #09090b;
-            --bg-glass: rgba(30, 30, 40, 0.6);
-            --primary: #6d28d9;
-            --accent: #d946ef; /* Magenta Neon */
-            --text-main: #ffffff;
-            --card-border: rgba(255,255,255,0.08);
+        /* --- THEME CONFIG --- */
+        :root { 
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --primary: #3b82f6;
+            --secondary: #64748b;
+            --text-main: #f8fafc;
+            --accent: #0ea5e9;
         }
 
-        body {
-            background-color: var(--bg-main);
-            background-image: radial-gradient(circle at top right, #2e1065, transparent 40%), 
-                              radial-gradient(circle at bottom left, #be185d, transparent 40%);
-            background-attachment: fixed;
-            color: var(--text-main);
-            font-family: 'Outfit', sans-serif;
-            padding-bottom: 100px;
-            min-height: 100vh;
+        body { 
+            background-color: var(--bg-dark); 
+            color: var(--text-main); 
+            font-family: 'Segoe UI', sans-serif; 
+            padding-bottom: 90px; /* Space for bottom nav */
+            overflow-x: hidden;
         }
-
+        
         /* HEADER */
-        .header {
-            padding: 30px 20px 10px 20px;
-        }
-        .header h3 { font-weight: 800; letter-spacing: -1px; background: linear-gradient(to right, #fff, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        /* NAV KATEGORI (RAPIH & CENTER) */
-        .cat-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-        .cat-item {
-            background: var(--bg-glass);
-            border: 1px solid var(--card-border);
-            backdrop-filter: blur(12px);
-            color: #94a3b8;
-            padding: 10px 18px;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .cat-item.active {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 4px 20px rgba(217, 70, 239, 0.4);
-        }
-
-        /* PROVIDER LIST (HORIZONTAL SCROLL) */
-        .scroll-wrapper {
-            overflow-x: auto;
-            white-space: nowrap;
-            padding-bottom: 10px;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .scroll-wrapper::-webkit-scrollbar { display: none; }
-        
-        .prov-card {
-            display: inline-block;
-            width: 100px;
-            margin-right: 10px;
-            background: #18181b;
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 15px 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            vertical-align: top;
-        }
-        .prov-card i { font-size: 24px; margin-bottom: 8px; color: var(--accent); }
-        .prov-card span { display: block; font-size: 11px; font-weight: 600; white-space: normal; line-height: 1.2; color: #e2e8f0; }
-        
-        .prov-card.selected {
-            background: #2e1065;
-            border-color: var(--accent);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        .prov-card.selected i { color: #fff; }
-
-        /* INPUTS */
-        .glass-panel {
-            background: var(--bg-glass);
-            border: 1px solid var(--card-border);
+        .top-nav { 
+            padding: 15px 20px; 
+            background: rgba(15, 23, 42, 0.95); 
             backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 25px;
+            position: sticky; top: 0; z-index: 100; 
+            border-bottom: 1px solid #334155;
         }
-        .input-custom {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-            border-radius: 12px;
-            padding: 12px 15px;
-            width: 100%;
-            outline: none;
-            font-weight: 500;
-            transition: 0.3s;
+        .search-box {
+            background: #334155; border-radius: 12px; padding: 10px 15px; 
+            display: flex; align-items: center; transition: 0.3s;
         }
-        .input-custom:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(217, 70, 239, 0.2); }
-        .lbl-input { font-size: 10px; font-weight: 700; color: #a78bfa; margin-bottom: 8px; display: block; letter-spacing: 0.5px; }
+        .search-box:focus-within { border: 1px solid var(--primary); box-shadow: 0 0 10px rgba(59, 130, 246, 0.3); }
+        .search-box input { border: none; background: transparent; width: 100%; color: white; outline: none; margin-left: 10px; }
 
-        /* PRODUCT GRID */
-        .item-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+        /* CATEGORY PILLS */
+        .cat-scroll { 
+            overflow-x: auto; white-space: nowrap; padding: 15px 20px; 
+            scrollbar-width: none; -ms-overflow-style: none;
         }
-        .item-card {
-            background: linear-gradient(180deg, rgba(40,40,50,0.8), rgba(20,20,30,0.9));
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 15px;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
+        .cat-scroll::-webkit-scrollbar { display: none; }
+        .cat-btn { 
+            display: inline-block; background: var(--bg-card); color: #94a3b8; 
+            padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; 
+            margin-right: 8px; border: 1px solid #334155; text-decoration: none; transition: 0.3s;
+        }
+        .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
+
+        /* GRID LAYOUT */
+        .game-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 20px;
+        }
+        .game-card {
+            background: var(--bg-card); border-radius: 16px; overflow: hidden;
+            text-align: center; cursor: pointer; border: 1px solid #334155;
+            transition: transform 0.2s, border-color 0.2s; position: relative;
+        }
+        .game-card:active { transform: scale(0.96); }
+        .game-img-wrapper {
+            width: 100%; aspect-ratio: 1/1; position: relative; overflow: hidden;
+        }
+        .game-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        .game-title {
+            font-size: 11px; font-weight: 700; color: white; padding: 10px 5px;
+            text-transform: capitalize; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* DETAIL & PAYMENT FORM */
+        #paymentArea { display: none; padding: 20px; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .form-card { background: var(--bg-card); padding: 20px; border-radius: 20px; border: 1px solid #334155; margin-bottom: 20px; }
+        .input-dark { 
+            background: #0f172a; border: 1px solid #334155; color: white; 
+            border-radius: 12px; padding: 12px; width: 100%; outline: none; font-weight: 600; 
+        }
+        .input-dark:focus { border-color: var(--primary); }
+        
+        .prod-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .prod-item {
+            background: #0f172a; padding: 12px; border-radius: 14px; border: 1px solid #334155; cursor: pointer; position: relative; overflow: hidden;
+        }
+        .prod-item:hover { border-color: var(--primary); background: rgba(59, 130, 246, 0.05); }
+        .prod-name { font-size: 12px; color: #cbd5e1; font-weight: 500; margin-bottom: 4px; line-height: 1.3; }
+        .prod-price { font-size: 14px; color: var(--accent); font-weight: 700; }
+
+        /* HISTORY SECTION */
+        #historySection { display: none; padding: 20px; }
+        .hist-card {
+            background: var(--bg-card); border-radius: 16px; padding: 15px; margin-bottom: 15px;
+            border-left: 4px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .hist-id { font-size: 10px; color: var(--secondary); letter-spacing: 1px; font-weight: 700; }
+        .hist-name { font-size: 14px; font-weight: 700; color: white; margin: 2px 0; }
+        .hist-date { font-size: 10px; color: #64748b; }
+        .hist-price { font-size: 14px; font-weight: bold; color: var(--primary); text-align: right; }
+        .hist-sn { font-size: 10px; background: #334155; padding: 2px 6px; border-radius: 4px; color: #fff; margin-top: 4px; display: inline-block; }
+
+        /* BOTTOM NAV */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(30, 41, 59, 0.9); backdrop-filter: blur(10px);
+            border-top: 1px solid #334155; padding: 10px 0;
+            display: flex; justify-content: space-around; z-index: 999;
+        }
+        .nav-icon { 
+            color: #64748b; text-align: center; font-size: 12px; cursor: pointer; flex: 1; 
             transition: 0.2s;
         }
-        .item-card:hover { border-color: var(--accent); background: rgba(50,50,70,0.9); }
-        .item-card::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px;
-            background: var(--accent); transform: scaleX(0); transition: 0.3s; transform-origin: left;
-        }
-        .item-card:hover::after { transform: scaleX(1); }
-        
-        .price-tag { font-size: 15px; font-weight: 700; color: #fff; margin-top: 5px; }
-        .name-tag { font-size: 12px; color: #94a3b8; line-height: 1.3; font-weight: 500; }
+        .nav-icon i { font-size: 20px; margin-bottom: 4px; display: block; }
+        .nav-icon.active { color: var(--primary); transform: translateY(-2px); }
 
-        /* Modal */
-        .modal-content { background: #1c1917; border: 1px solid #444; color: white; border-radius: 20px; }
-        .btn-close { filter: invert(1); }
+        /* MODAL */
+        .modal-content { background: var(--bg-card); border-radius: 24px; border: 1px solid #475569; }
+        .modal-backdrop.show { opacity: 0.8; }
+        
+        .badge-pending { background: #f59e0b; color: black; padding: 5px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; }
     </style>
 </head>
 <body>
 
-<div class="header d-flex justify-content-between align-items-center">
-    <div>
-        <h3 class="m-0"><i class="fas fa-bolt text-warning me-2"></i>RAYSTORE</h3>
-        <p class="m-0 text-muted" style="font-size: 12px;">Top Up Tercepat & Aman</p>
-    </div>
-    <span id="loadingBadge" class="badge bg-dark border border-secondary p-2"><i class="fas fa-sync fa-spin"></i> Load</span>
-</div>
-
-<div class="container">
-    
-    <div class="cat-container">
-        <div class="cat-item active" onclick="setCat('Games', this)"><i class="fas fa-gamepad"></i> Games</div>
-        <div class="cat-item" onclick="setCat('Pulsa', this)"><i class="fas fa-mobile-alt"></i> Pulsa</div>
-        <div class="cat-item" onclick="setCat('Data', this)"><i class="fas fa-wifi"></i> Data</div>
-        <div class="cat-item" onclick="setCat('Apps', this)"><i class="fas fa-crown text-warning"></i> Apps</div>
-        <div class="cat-item" onclick="setCat('PLN', this)"><i class="fas fa-bolt text-warning"></i> PLN</div>
-    </div>
-
-    <div class="mb-4">
-        <label class="lbl-input ps-2">PILIH LAYANAN</label>
-        <div class="scroll-wrapper" id="provContainer">
-            <div class="text-center py-2 text-muted small w-100">Memuat data...</div>
+    <div class="top-nav" id="topHeader">
+        <div class="d-flex align-items-center justify-content-between">
+            <div style="flex:1" class="search-box">
+                <i class="fas fa-search text-muted"></i>
+                <input type="text" id="searchInput" placeholder="Cari Game..." onkeyup="filterBrands()">
+            </div>
+            <div class="ms-3 text-white fw-bold" style="font-style: italic;">RAY<span class="text-primary">STORE</span></div>
         </div>
-        <input type="hidden" id="selProv"> 
     </div>
 
-    <div class="glass-panel">
-        <div id="dynamicInputArea">
-            <label class="lbl-input" id="lblTarget">USER ID</label>
-            <div id="boxSingle">
-                <input type="text" id="valSingle" class="input-custom" placeholder="Masukkan ID">
+    <div id="mainContent">
+        
+        <div id="pageHome">
+            <div class="cat-scroll">
+                <a href="#" class="cat-btn active" onclick="setCat('Games', this)"><i class="fas fa-gamepad me-1"></i> Games</a>
+                <a href="#" class="cat-btn" onclick="setCat('Pulsa', this)"><i class="fas fa-mobile-alt me-1"></i> Pulsa</a>
+                <a href="#" class="cat-btn" onclick="setCat('Apps', this)"><i class="fas fa-crown me-1"></i> Premium</a>
+                <a href="#" class="cat-btn" onclick="setCat('Voucher', this)"><i class="fas fa-ticket-alt me-1"></i> Voucher</a>
+            </div>
+
+            <div class="px-3 mb-2 d-flex align-items-center">
+                <i class="fas fa-fire text-warning me-2"></i> <h6 class="m-0 fw-bold">Populer Sekarang</h6>
             </div>
             
-            <div id="boxDual" class="row g-2 d-none">
-                <div class="col-7"><input type="tel" id="valId" class="input-custom" placeholder="User ID"></div>
-                <div class="col-5"><input type="tel" id="valZone" class="input-custom" placeholder="Zone ID"></div>
+            <div id="brandGrid" class="game-grid pb-4">
+                </div>
+            <div id="loader" class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+        </div>
+
+        <div id="paymentArea">
+            <div class="d-flex align-items-center mb-3">
+                <button class="btn btn-sm btn-dark me-3 rounded-circle" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
+                <img id="selImg" src="" style="width: 40px; height: 40px; border-radius: 10px; margin-right: 10px; object-fit: cover;">
+                <div>
+                    <h5 class="m-0 fw-bold text-white" id="selTitle">Game Name</h5>
+                    <small class="text-muted" id="selCat">Category</small>
+                </div>
             </div>
-            <small id="hintText" class="text-muted d-block mt-2" style="font-size: 10px;">*Pastikan data benar</small>
+
+            <div class="form-card">
+                <label class="small text-muted fw-bold mb-2" id="lblTarget">DATA AKUN</label>
+                <div id="boxSingle"><input type="tel" id="valSingle" class="input-dark" placeholder="Masukkan ID / Nomor HP"></div>
+                <div id="boxDual" class="d-none row g-2">
+                    <div class="col-7"><input type="tel" id="valId" class="input-dark" placeholder="User ID"></div>
+                    <div class="col-5"><input type="tel" id="valZone" class="input-dark" placeholder="Zone ID"></div>
+                </div>
+            </div>
+
+            <label class="small text-muted fw-bold ms-2 mb-2">PILIH ITEM</label>
+            <div id="prodList" class="prod-grid"></div>
+        </div>
+
+        <div id="historySection">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold m-0">Riwayat Transaksi</h4>
+                <button class="btn btn-sm btn-outline-danger" onclick="clearHistory()"><i class="fas fa-trash"></i></button>
+            </div>
+            <div id="historyList">
+                </div>
+            <div id="emptyHist" class="text-center py-5 d-none">
+                <i class="fas fa-history fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Belum ada transaksi</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-icon active" id="navHome" onclick="switchTab('home')">
+            <i class="fas fa-home"></i> Home
+        </div>
+        <div class="nav-icon" id="navHist" onclick="switchTab('history')">
+            <i class="fas fa-receipt"></i> History
         </div>
     </div>
 
-    <label class="lbl-input ps-2">PILIH ITEM</label>
-    <div id="areaList" class="item-grid mb-5">
-        <div class="text-center text-muted py-5" style="grid-column: span 2;">
-            <i class="fas fa-hand-pointer fa-2x mb-2 opacity-50"></i><br>Pilih layanan di atas dulu
-        </div>
-    </div>
-
-</div>
-
-<div class="modal fade" id="modalTrx" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content text-center p-3">
-            <div class="modal-header border-0 p-0 mb-2">
-                <h6 class="fw-bold text-uppercase w-100">Pembayaran</h6>
-            </div> 
-            
-            <div class="modal-body p-0">
-                <div id="v-qris" class="d-none">
-                    <h2 class="fw-bold text-white mb-3" id="txtPrice">Rp 0</h2>
-                    <div class="bg-white p-2 rounded d-inline-block mb-3">
-                        <img id="imgQr" src="" class="img-fluid rounded" style="max-height: 200px;">
+    <div class="modal fade" id="modalTrx" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-white">
+                <div class="modal-body p-4 text-center">
+                    
+                    <div id="v-qris" class="d-none">
+                        <div class="badge-pending mb-3">MENUNGGU PEMBAYARAN</div>
+                        <h2 class="text-white fw-bold" id="txtPrice">Rp 0</h2>
+                        <div class="bg-white p-2 rounded-4 d-inline-block my-3 shadow">
+                            <img id="imgQr" src="" class="img-fluid rounded" style="max-height: 220px;">
+                        </div>
+                        <p class="small text-muted mb-3">Scan QRIS di atas untuk membayar otomatis.</p>
+                        <button class="btn btn-outline-danger w-100 rounded-pill" onclick="cancelPay()">Batalkan</button>
                     </div>
-                    <div class="alert alert-dark border border-secondary py-2 small">
-                        <div class="spinner-border spinner-border-sm text-warning me-1"></div> Menunggu scan...
+
+                    <div id="v-succ" class="d-none">
+                        <div class="mb-3 text-success"><i class="fas fa-check-circle fa-5x"></i></div>
+                        <h4 class="fw-bold">Pembayaran Berhasil!</h4>
+                        <p class="text-muted small">Transaksi ID: <span id="succTrxId" class="text-white fw-bold">-</span></p>
+                        <div class="bg-dark p-3 rounded mb-3 border border-secondary">
+                            <small class="text-muted d-block text-start">SN / Kode Voucher:</small>
+                            <span id="txtSn" class="fw-bold text-primary" style="font-family: monospace; font-size: 16px;">-</span>
+                        </div>
+                        <button class="btn btn-primary w-100 rounded-pill" onclick="clsModal()">Tutup</button>
                     </div>
-                    <button class="btn btn-outline-danger w-100 rounded-pill btn-sm" onclick="cancelPay()">Batalkan</button>
-                </div>
 
-                <div id="v-succ" class="d-none py-2">
-                    <i class="fas fa-check-circle text-success fa-4x mb-3"></i>
-                    <h4>Berhasil!</h4>
-                    <p class="small text-muted">Transaksi sukses diproses.</p>
-                    <div class="bg-dark p-2 rounded border border-secondary text-break font-monospace small" id="txtSn"></div>
-                    <button class="btn btn-primary w-100 rounded-pill mt-3" onclick="clsModal()">Tutup</button>
-                </div>
+                    <div id="v-fail" class="d-none">
+                        <div class="mb-3 text-danger"><i class="fas fa-times-circle fa-5x"></i></div>
+                        <h5>Transaksi Gagal</h5>
+                        <p class="small text-danger" id="txtErr">Error message</p>
+                        <button class="btn btn-secondary w-100 rounded-pill" onclick="clsModal()">Tutup</button>
+                    </div>
 
-                <div id="v-fail" class="d-none py-2">
-                    <i class="fas fa-times-circle text-danger fa-4x mb-3"></i>
-                    <h4>Gagal</h4>
-                    <p class="small text-danger" id="txtErr">Error</p>
-                    <button class="btn btn-secondary w-100 rounded-pill" onclick="clsModal()">Tutup</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
-    let db = [];
-    let cat = 'Games';
-    let timer;
-    let currId = null;
-    let metaData = {};
-
-    window.onload = async () => {
-        try {
-            const res = await axios.get('/api/services');
-            if(res.data.status) {
-                db = res.data.data;
-                document.getElementById('loadingBadge').style.display = 'none';
-                renderProviders(); // Panggil fungsi render baru
+    <script>
+        let db = [];
+        let groupedData = {};
+        let currentCat = 'Games';
+        let currentBrand = '';
+        let timer;
+        let currId = null;
+        let metaData = {};
+        
+        // --- INIT ---
+        window.onload = async () => {
+            loadHistory(); // Load history dari local storage
+            try {
+                const res = await axios.get('/api/services');
+                if(res.data.status) {
+                    db = res.data.data;
+                    processData();
+                    document.getElementById('loader').style.display = 'none';
+                }
+            } catch(e) {
+                document.getElementById('loader').innerHTML = '<span class="text-danger">Gagal koneksi server</span>';
             }
-        } catch(e) {
-            document.getElementById('loadingBadge').innerText = 'Error';
-            document.getElementById('loadingBadge').classList.replace('bg-dark', 'bg-danger');
-        }
-    };
+        };
 
-    function setCat(c, el) {
-        cat = c;
-        // Update Nav Styles
-        document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
-        
-        // Reset Inputs based on Category (SMART INPUT LOGIC)
-        const lbl = document.getElementById('lblTarget');
-        const inp = document.getElementById('valSingle');
-        const hint = document.getElementById('hintText');
-        
-        document.getElementById('boxSingle').classList.remove('d-none');
-        document.getElementById('boxDual').classList.add('d-none');
-        document.getElementById('selProv').value = ''; // Reset pilihan provider
-        document.getElementById('areaList').innerHTML = '<div class="text-center text-muted py-5" style="grid-column: span 2;">Silakan pilih layanan...</div>';
+        // --- NAVIGATION LOGIC ---
+        function switchTab(tab) {
+            const homePage = document.getElementById('pageHome');
+            const histPage = document.getElementById('historySection');
+            const payPage = document.getElementById('paymentArea');
+            const navHome = document.getElementById('navHome');
+            const navHist = document.getElementById('navHist');
 
-        if(cat === 'Apps') {
-            lbl.innerText = 'EMAIL / ID AKUN';
-            inp.placeholder = 'contoh: nama@email.com';
-            inp.type = 'email';
-            hint.innerText = '*Pastikan email aktif dan benar';
-        } else if(cat === 'Pulsa' || cat === 'Data') {
-            lbl.innerText = 'NOMOR HANDPHONE';
-            inp.placeholder = '08xxxxxxxxxx';
-            inp.type = 'tel';
-            hint.innerText = '*Gunakan awalan 08';
-        } else if(cat === 'PLN') {
-            lbl.innerText = 'NOMOR METER / ID PEL';
-            inp.placeholder = 'Masukkan Nomor Meter';
-            inp.type = 'tel';
-            hint.innerText = '*Cek ulang nomor meter';
-        } else {
-            lbl.innerText = 'USER ID';
-            inp.placeholder = 'Masukkan User ID';
-            hint.innerText = '*Masukkan ID dengan benar';
-        }
+            // Reset Active Nav
+            navHome.classList.remove('active');
+            navHist.classList.remove('active');
 
-        renderProviders();
-    }
-
-    // FUNGSI RENDER PROVIDER BARU (PAKAI KARTU/CARD)
-    function renderProviders() {
-        const div = document.getElementById('provContainer');
-        div.innerHTML = '';
-        
-        const ps = new Set();
-        db.forEach(i => {
-            if(i.status !== 'available') return;
-            const c = (i.category || '').toLowerCase();
-            const n = (i.name || '').toLowerCase();
-            const brand = i.brand || i.provider || 'Others';
-            
-            let m = false;
-            // Logic filter yang sama
-            if(cat==='Games' && (c.includes('games') || i.type === 'game' || c.includes('voucher'))) m=true;
-            else if(cat==='Pulsa' && c.includes('pulsa')) m=true;
-            else if(cat==='Data' && (c.includes('data') || c.includes('kuota') || c.includes('internet'))) m=true;
-            else if(cat==='PLN' && c.includes('pln')) m=true;
-            else if(cat==='Apps') {
-                if(c.includes('streaming') || c.includes('premium') || n.includes('netflix') || n.includes('spotify') || n.includes('vidio') || n.includes('youtube')) m=true;
+            if(tab === 'home') {
+                histPage.style.display = 'none';
+                payPage.style.display = 'none';
+                homePage.style.display = 'block';
+                navHome.classList.add('active');
+                document.getElementById('topHeader').style.display = 'block';
+            } else if(tab === 'history') {
+                homePage.style.display = 'none';
+                payPage.style.display = 'none';
+                histPage.style.display = 'block';
+                navHist.classList.add('active');
+                document.getElementById('topHeader').style.display = 'none';
+                loadHistory(); // Refresh list
             }
-            if(m) ps.add(brand);
-        });
-
-        const sorted = Array.from(ps).sort();
-        
-        if(sorted.length === 0) {
-            div.innerHTML = '<div class="text-muted small ps-2">Tidak ada layanan tersedia</div>';
-            return;
         }
 
-        // Render Cards
-        sorted.forEach(p => {
-            // Tentukan icon sederhana berdasarkan nama (opsional, biar gak polos)
-            let icon = 'fa-gamepad';
-            const pl = p.toLowerCase();
-            if(pl.includes('telkomsel')) icon = 'fa-signal';
-            else if(pl.includes('indosat') || pl.includes('xl')) icon = 'fa-tower-cell';
-            else if(pl.includes('pln')) icon = 'fa-bolt';
-            else if(pl.includes('dana') || pl.includes('gopay')) icon = 'fa-wallet';
-            else if(pl.includes('mobile legends')) icon = 'fa-shield-halved';
-            else if(pl.includes('free fire')) icon = 'fa-crosshairs';
-            else if(pl.includes('google')) icon = 'fa-play';
-            else if(cat === 'Apps') icon = 'fa-film';
-
-            div.innerHTML += `
-            <div class="prov-card" onclick="selectProvider('${p}', this)">
-                <i class="fas ${icon}"></i>
-                <span>${p}</span>
-            </div>`;
-        });
-    }
-
-    // FUNGSI SAAT PROVIDER DI KLIK
-    function selectProvider(val, el) {
-        document.getElementById('selProv').value = val;
-        
-        // Visual Active State
-        document.querySelectorAll('.prov-card').forEach(c => c.classList.remove('selected'));
-        el.classList.add('selected');
-
-        renderItems();
-    }
-
-    function renderItems() {
-        const prov = document.getElementById('selProv').value;
-        const div = document.getElementById('areaList');
-        div.innerHTML = '';
-        if(!prov) return;
-
-        // Cek Khusus MLBB
-        const isML = prov.toLowerCase().includes('mobile legends') || prov.toLowerCase().includes('mlbb');
-        if(isML) {
-            document.getElementById('boxSingle').classList.add('d-none');
-            document.getElementById('boxDual').classList.remove('d-none');
-            document.getElementById('lblTarget').innerText = 'USER ID & ZONE';
-            document.getElementById('hintText').innerText = '*Contoh: 12345678 (1234)';
-        } else {
-            document.getElementById('boxDual').classList.add('d-none');
-            document.getElementById('boxSingle').classList.remove('d-none');
-            // Label sudah di set di setCat, jadi aman
-        }
-
-        const list = db.filter(i => (i.brand === prov || i.provider === prov) && i.status === 'available');
-        list.sort((a,b) => parseInt(a.price) - parseInt(b.price));
-
-        list.forEach(i => {
-            const modal = parseInt(i.price);
-            const sell = Math.ceil((modal + 700) / 0.986); // Margin profit
-            
-            div.innerHTML += `
-            <div class="item-card" onclick="pay('${i.code}', '${i.price}')">
-                <div class="name-tag">${i.name}</div>
-                <div class="price-tag text-end">Rp ${sell.toLocaleString('id-ID')}</div>
-            </div>`;
-        });
-    }
-
-    async function pay(code, raw) {
-        const prov = document.getElementById('selProv').value.toLowerCase();
-        let target = '';
-
-        if(prov.includes('mobile legends') || prov.includes('mlbb')) {
-            const id = document.getElementById('valId').value;
-            const zone = document.getElementById('valZone').value;
-            if(!id || !zone) return Swal.fire({title:'Eits!', text:'ID dan Zone harus diisi', icon:'warning', background:'#1c1917', color:'#fff'});
-            target = `${zone}|${id}`;
-        } else {
-            target = document.getElementById('valSingle').value;
-            let msg = 'Nomor/ID tujuan belum diisi!';
-            if(cat === 'Apps') msg = 'Email/ID belum diisi!';
-            
-            if(target.length < 4) return Swal.fire({title:'Eits!', text:msg, icon:'warning', background:'#1c1917', color:'#fff'});
-        }
-
-        const m = new bootstrap.Modal(document.getElementById('modalTrx'));
-        m.show();
-        
-        document.getElementById('v-qris').classList.add('d-none');
-        document.getElementById('v-succ').classList.add('d-none');
-        document.getElementById('v-fail').classList.add('d-none');
-
-        try {
-            const res = await axios.post('/api/create-payment', {
-                service_code: code,
-                target: target,
-                price_original: raw
+        // --- DATA PROCESSING ---
+        function processData() {
+            groupedData = {};
+            db.forEach(item => {
+                if(item.status !== 'available') return;
+                let brand = item.brand || item.provider || 'Others';
+                if(!groupedData[brand]) {
+                    groupedData[brand] = {
+                        name: brand,
+                        category: item.category,
+                        image: item.img_url || `https://ui-avatars.com/api/?name=${brand}&background=random`,
+                        items: []
+                    };
+                }
+                groupedData[brand].items.push(item);
             });
+            renderBrands();
+        }
 
-            if(res.data.status) {
-                const d = res.data.data;
-                metaData = d.meta;
-                currId = d.deposit_id;
+        function renderBrands() {
+            const grid = document.getElementById('brandGrid');
+            grid.innerHTML = '';
+            const keys = Object.keys(groupedData).sort();
+
+            keys.forEach(key => {
+                const data = groupedData[key];
+                const catLower = (data.category || '').toLowerCase();
+                const nameLower = (data.name || '').toLowerCase();
                 
-                document.getElementById('imgQr').src = d.qr_image;
-                document.getElementById('txtPrice').innerText = 'Rp ' + d.amount.toLocaleString('id-ID');
-                document.getElementById('v-qris').classList.remove('d-none');
-                chk(d.deposit_id);
+                let show = false;
+                if(currentCat === 'Games' && (catLower.includes('games') || catLower.includes('voucher') || data.items[0].type === 'game')) show = true;
+                else if(currentCat === 'Pulsa' && catLower.includes('pulsa')) show = true;
+                else if(currentCat === 'Apps' && (catLower.includes('streaming') || catLower.includes('premium') || nameLower.includes('youtube'))) show = true;
+                else if(currentCat === 'Voucher' && (catLower.includes('token') || catLower.includes('pln'))) show = true;
+
+                const searchVal = document.getElementById('searchInput').value.toLowerCase();
+                if(searchVal && !key.toLowerCase().includes(searchVal)) show = false;
+
+                if(show) {
+                    grid.innerHTML += `
+                    <div class="game-card" onclick="openDetail('${key}')">
+                        <div class="game-img-wrapper">
+                            <img src="${data.image}" loading="lazy">
+                        </div>
+                        <div class="game-title">${data.name}</div>
+                    </div>`;
+                }
+            });
+            
+            if(grid.innerHTML === '') grid.innerHTML = '<div class="text-center text-muted small w-100 col-12 py-4">Tidak ditemukan</div>';
+        }
+
+        function setCat(cat, el) {
+            currentCat = cat;
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            if(el) el.classList.add('active');
+            renderBrands();
+        }
+
+        function filterBrands() { renderBrands(); }
+
+        // --- DETAIL PAGE ---
+        function openDetail(brandName) {
+            currentBrand = brandName;
+            const data = groupedData[brandName];
+            
+            document.getElementById('pageHome').style.display = 'none';
+            document.getElementById('paymentArea').style.display = 'block';
+            document.getElementById('topHeader').style.display = 'none';
+
+            document.getElementById('selTitle').innerText = brandName;
+            document.getElementById('selCat').innerText = data.category;
+            document.getElementById('selImg').src = data.image;
+
+            const isML = brandName.toLowerCase().includes('mobile legends');
+            if(isML) {
+                document.getElementById('boxSingle').classList.add('d-none');
+                document.getElementById('boxDual').classList.remove('d-none');
+                document.getElementById('lblTarget').innerText = 'USER ID & ZONE';
             } else {
-                Swal.fire('Gagal', res.data.message, 'error');
+                document.getElementById('boxDual').classList.add('d-none');
+                document.getElementById('boxSingle').classList.remove('d-none');
+                document.getElementById('lblTarget').innerText = 'NOMOR HP / ID TUJUAN';
+            }
+
+            const listDiv = document.getElementById('prodList');
+            listDiv.innerHTML = '';
+            data.items.sort((a,b) => parseInt(a.price) - parseInt(b.price));
+            
+            data.items.forEach(item => {
+                const modal = parseInt(item.price);
+                const sell = Math.ceil((modal + 700) / 0.986);
+                listDiv.innerHTML += `
+                <div class="prod-item" onclick="pay('${item.code}', '${item.price}', '${item.name}', '${sell}')">
+                    <div class="prod-name">${item.name}</div>
+                    <div class="prod-price">Rp ${sell.toLocaleString('id-ID')}</div>
+                </div>`;
+            });
+        }
+
+        function goHome() {
+            switchTab('home');
+        }
+
+        // --- PAYMENT & TRANSACTION LOGIC ---
+        let selectedItemName = '';
+        let selectedSellPrice = 0;
+
+        async function pay(code, raw, name, sellPrice) {
+            selectedItemName = name;
+            selectedSellPrice = sellPrice;
+            
+            const isML = currentBrand.toLowerCase().includes('mobile legends');
+            let target = '';
+
+            if(isML) {
+                const id = document.getElementById('valId').value;
+                const zone = document.getElementById('valZone').value;
+                if(!id || !zone) return Swal.fire('Oops', 'Isi User ID dan Zone ID!', 'warning');
+                target = `${id}${zone}`; 
+            } else {
+                target = document.getElementById('valSingle').value;
+                if(target.length < 4) return Swal.fire('Oops', 'Isi nomor tujuan dengan benar!', 'warning');
+            }
+
+            const m = new bootstrap.Modal(document.getElementById('modalTrx'));
+            m.show();
+            
+            document.getElementById('v-qris').classList.add('d-none');
+            document.getElementById('v-succ').classList.add('d-none');
+            document.getElementById('v-fail').classList.add('d-none');
+
+            try {
+                const res = await axios.post('/api/create-payment', {
+                    service_code: code,
+                    target: target,
+                    price_original: raw
+                });
+
+                if(res.data.status) {
+                    const d = res.data.data;
+                    metaData = d.meta;
+                    currId = d.deposit_id;
+                    
+                    document.getElementById('imgQr').src = d.qr_image;
+                    document.getElementById('txtPrice').innerText = 'Rp ' + d.amount.toLocaleString('id-ID');
+                    document.getElementById('v-qris').classList.remove('d-none');
+                    chk(d.deposit_id);
+                } else {
+                    Swal.fire('Gagal', res.data.message, 'error');
+                    clsModal();
+                }
+            } catch(e) {
                 clsModal();
             }
-        } catch(e) {
-            Swal.fire('Error', 'Server Error', 'error');
-            clsModal();
         }
-    }
 
-    function chk(id) {
-        if(timer) clearInterval(timer);
-        timer = setInterval(async () => {
-            try {
-                const res = await axios.post('/api/check-status', { deposit_id: id, meta: metaData });
-                if(res.data.state === 'success') {
-                    clearInterval(timer);
-                    document.getElementById('v-qris').classList.add('d-none');
-                    document.getElementById('v-succ').classList.remove('d-none');
-                    document.getElementById('txtSn').innerText = res.data.sn;
-                } else if(res.data.state === 'failed') {
-                    clearInterval(timer);
-                    document.getElementById('v-qris').classList.add('d-none');
-                    document.getElementById('v-fail').classList.remove('d-none');
-                    document.getElementById('txtErr').innerText = res.data.message;
+        function chk(id) {
+            if(timer) clearInterval(timer);
+            timer = setInterval(async () => {
+                try {
+                    const res = await axios.post('/api/check-status', { deposit_id: id, meta: metaData });
+                    if(res.data.state === 'success') {
+                        clearInterval(timer);
+                        
+                        // --- SUKSES: GENERATE TRX ID & SIMPAN HISTORY ---
+                        const myTrxId = generateTrxId();
+                        saveToHistory(myTrxId, res.data.sn);
+
+                        document.getElementById('v-qris').classList.add('d-none');
+                        document.getElementById('v-succ').classList.remove('d-none');
+                        document.getElementById('succTrxId').innerText = myTrxId;
+                        document.getElementById('txtSn').innerText = res.data.sn;
+
+                    } else if(res.data.state === 'failed') {
+                        clearInterval(timer);
+                        document.getElementById('v-qris').classList.add('d-none');
+                        document.getElementById('v-fail').classList.remove('d-none');
+                        document.getElementById('txtErr').innerText = res.data.message;
+                    }
+                } catch(e){}
+            }, 3000);
+        }
+
+        // --- HISTORY & TRX GENERATOR LOGIC (LOCALSTORAGE) ---
+        
+        // 1. Generate TRX ID (RAY000001)
+        function generateTrxId() {
+            let lastId = parseInt(localStorage.getItem('ray_trx_counter') || '0');
+            lastId++;
+            localStorage.setItem('ray_trx_counter', lastId);
+            return 'RAY' + String(lastId).padStart(6, '0');
+        }
+
+        // 2. Simpan Data ke History
+        function saveToHistory(trxId, sn) {
+            const historyItem = {
+                trx_id: trxId,
+                item_name: selectedItemName,
+                price: selectedSellPrice,
+                date: new Date().toLocaleString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit'}),
+                sn: sn
+            };
+
+            let historyData = JSON.parse(localStorage.getItem('ray_history') || '[]');
+            historyData.unshift(historyItem); // Masukkan ke paling atas (terbaru)
+            
+            // Limit history simpan 50 terakhir saja biar storage gak penuh
+            if(historyData.length > 50) historyData.pop(); 
+            
+            localStorage.setItem('ray_history', JSON.stringify(historyData));
+        }
+
+        // 3. Render List History
+        function loadHistory() {
+            const list = document.getElementById('historyList');
+            const empty = document.getElementById('emptyHist');
+            const raw = localStorage.getItem('ray_history');
+            
+            if(!raw) {
+                list.innerHTML = '';
+                empty.classList.remove('d-none');
+                return;
+            }
+
+            const data = JSON.parse(raw);
+            if(data.length === 0) {
+                list.innerHTML = '';
+                empty.classList.remove('d-none');
+                return;
+            }
+
+            empty.classList.add('d-none');
+            list.innerHTML = '';
+
+            data.forEach(h => {
+                list.innerHTML += `
+                <div class="hist-card">
+                    <div>
+                        <div class="hist-id">#${h.trx_id}</div>
+                        <div class="hist-name">${h.item_name}</div>
+                        <div class="hist-date">${h.date}</div>
+                        <div class="hist-sn">SN: ${h.sn}</div>
+                    </div>
+                    <div class="hist-price">Rp ${parseInt(h.price).toLocaleString('id-ID')}</div>
+                </div>`;
+            });
+        }
+
+        function clearHistory() {
+            Swal.fire({
+                title: 'Hapus Riwayat?',
+                text: "Data tidak bisa dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.removeItem('ray_history');
+                    loadHistory();
+                    Swal.fire('Terhapus!', 'Riwayat bersih.', 'success');
                 }
-            } catch(e){}
-        }, 3000);
-    }
+            });
+        }
 
-    async function cancelPay() {
-        if(timer) clearInterval(timer);
-        const m = bootstrap.Modal.getInstance(document.getElementById('modalTrx'));
-        m.hide();
-        if(currId) { try { await axios.post('/api/cancel-payment', { deposit_id: currId }); } catch(e) {} }
-    }
+        // --- UTILS ---
+        async function cancelPay() {
+            if(timer) clearInterval(timer);
+            const m = bootstrap.Modal.getInstance(document.getElementById('modalTrx'));
+            m.hide();
+            if(currId) axios.post('/api/cancel-payment', { deposit_id: currId });
+        }
 
-    function clsModal() {
-        if(timer) clearInterval(timer);
-        const m = bootstrap.Modal.getInstance(document.getElementById('modalTrx'));
-        m.hide();
-    }
-</script>
-
+        function clsModal() {
+            if(timer) clearInterval(timer);
+            const m = bootstrap.Modal.getInstance(document.getElementById('modalTrx'));
+            m.hide();
+            // Jika sukses, redirect ke history biar user liat
+            if(!document.getElementById('v-succ').classList.contains('d-none')) {
+                switchTab('history');
+            }
+        }
+    </script>
 </body>
 </html>
