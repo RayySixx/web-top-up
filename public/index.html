@@ -3,253 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RayStore Gaming</title>
+    <title>RayStore-Digital</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Russo+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-body: #0f0c29;
-            --bg-card: #24243e;
-            --bg-input: #1b1b2f;
-            --primary: #764ba2;
-            --accent: #00d2ff; /* Cyber Blue */
+            --bg-main: #09090b;
+            --bg-glass: rgba(30, 30, 40, 0.6);
+            --primary: #6d28d9;
+            --accent: #d946ef; /* Magenta Neon */
             --text-main: #ffffff;
-            --text-muted: #8e9aaf;
-            --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-border: rgba(255,255,255,0.08);
         }
 
         body {
-            background-color: var(--bg-body);
-            background-image: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+            background-color: var(--bg-main);
+            background-image: radial-gradient(circle at top right, #2e1065, transparent 40%), 
+                              radial-gradient(circle at bottom left, #be185d, transparent 40%);
             background-attachment: fixed;
             color: var(--text-main);
-            font-family: 'Poppins', sans-serif;
-            padding-bottom: 80px;
+            font-family: 'Outfit', sans-serif;
+            padding-bottom: 100px;
             min-height: 100vh;
         }
 
         /* HEADER */
         .header {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding: 20px 20px 25px 20px;
-            border-radius: 0 0 30px 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            position: sticky;
-            top: 0;
-            z-index: 99;
+            padding: 30px 20px 10px 20px;
         }
-        .header h4 { font-family: 'Russo One', sans-serif; letter-spacing: 1px; text-transform: uppercase; background: var(--gradient-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header h3 { font-weight: 800; letter-spacing: -1px; background: linear-gradient(to right, #fff, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* NAV PILLS */
-        .nav-scroller { overflow-x: auto; white-space: nowrap; padding: 10px 0; -webkit-overflow-scrolling: touch; }
-        .nav-scroller::-webkit-scrollbar { display: none; }
-        .nav-pills .nav-link {
-            background: rgba(255,255,255,0.05);
-            color: var(--text-muted);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            margin-right: 10px;
-            font-size: 12px;
+        /* NAV KATEGORI (RAPIH & CENTER) */
+        .cat-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .cat-item {
+            background: var(--bg-glass);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            color: #94a3b8;
             padding: 10px 18px;
-            transition: all 0.3s ease;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .nav-pills .nav-link:active, .nav-pills .nav-link:focus { transform: scale(0.95); }
-        .nav-pills .nav-link.active {
-            background: var(--gradient-main);
+        .cat-item.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white;
-            border: none;
-            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+            border-color: transparent;
+            box-shadow: 0 4px 20px rgba(217, 70, 239, 0.4);
         }
-        .nav-pills .nav-link i { display: block; font-size: 18px; margin-bottom: 4px; }
+
+        /* PROVIDER LIST (HORIZONTAL SCROLL) */
+        .scroll-wrapper {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 10px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .scroll-wrapper::-webkit-scrollbar { display: none; }
+        
+        .prov-card {
+            display: inline-block;
+            width: 100px;
+            margin-right: 10px;
+            background: #18181b;
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            vertical-align: top;
+        }
+        .prov-card i { font-size: 24px; margin-bottom: 8px; color: var(--accent); }
+        .prov-card span { display: block; font-size: 11px; font-weight: 600; white-space: normal; line-height: 1.2; color: #e2e8f0; }
+        
+        .prov-card.selected {
+            background: #2e1065;
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .prov-card.selected i { color: #fff; }
 
         /* INPUTS */
-        .input-group-custom {
-            background: var(--bg-input);
+        .glass-panel {
+            background: var(--bg-glass);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .input-custom {
+            background: rgba(0,0,0,0.3);
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-            padding: 5px 15px;
-            margin-bottom: 15px;
-            transition: 0.3s;
-        }
-        .input-group-custom:focus-within {
-            border-color: var(--accent);
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
-        }
-        .input-group-custom input, .input-group-custom select {
-            background: transparent;
-            border: none;
             color: white;
-            padding: 10px 0;
+            border-radius: 12px;
+            padding: 12px 15px;
             width: 100%;
             outline: none;
             font-weight: 500;
+            transition: 0.3s;
         }
-        .input-group-custom select option { background: var(--bg-card); color: white; }
-        .form-label { font-size: 10px; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; margin-left: 5px; }
+        .input-custom:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(217, 70, 239, 0.2); }
+        .lbl-input { font-size: 10px; font-weight: 700; color: #a78bfa; margin-bottom: 8px; display: block; letter-spacing: 0.5px; }
 
-        /* PRODUCT GRID (CARD STYLE) */
-        .prod-card {
-            background: linear-gradient(145deg, #1e1e2f, #252538);
-            border: 1px solid rgba(255,255,255,0.05);
+        /* PRODUCT GRID */
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .item-card {
+            background: linear-gradient(180deg, rgba(40,40,50,0.8), rgba(20,20,30,0.9));
+            border: 1px solid var(--card-border);
             border-radius: 16px;
             padding: 15px;
-            height: 100%;
             position: relative;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
             overflow: hidden;
+            cursor: pointer;
+            transition: 0.2s;
         }
-        .prod-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
-            background: var(--gradient-main); opacity: 0; transition: 0.3s;
+        .item-card:hover { border-color: var(--accent); background: rgba(50,50,70,0.9); }
+        .item-card::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px;
+            background: var(--accent); transform: scaleX(0); transition: 0.3s; transform-origin: left;
         }
-        .prod-card:active { transform: scale(0.96); }
-        .prod-card:hover, .prod-card.selected {
-            border-color: rgba(118, 75, 162, 0.5);
-            background: #2a2a40;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
-        .prod-card:hover::before { opacity: 1; }
+        .item-card:hover::after { transform: scaleX(1); }
         
-        .prod-name { font-size: 12px; font-weight: 500; color: #e2e8f0; line-height: 1.3; margin-bottom: 10px; }
-        .prod-price { font-size: 14px; font-weight: 700; color: var(--accent); text-shadow: 0 0 10px rgba(0, 210, 255, 0.3); }
-        .prod-cat { font-size: 9px; color: var(--text-muted); position: absolute; top: 10px; right: 10px; opacity: 0.5; }
+        .price-tag { font-size: 15px; font-weight: 700; color: #fff; margin-top: 5px; }
+        .name-tag { font-size: 12px; color: #94a3b8; line-height: 1.3; font-weight: 500; }
 
-        /* MODAL DARK */
-        .modal-content {
-            background: #1a1a2e;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-        }
+        /* Modal */
+        .modal-content { background: #1c1917; border: 1px solid #444; color: white; border-radius: 20px; }
         .btn-close { filter: invert(1); }
-        .spinner-grow { --bs-spinner-width: 1rem; --bs-spinner-height: 1rem; }
-
-        /* UTILS */
-        .text-neon { color: var(--accent); }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <div class="d-flex justify-content-between align-items-center">
-        <div>
-            <h4 class="fw-bold m-0"><i class="fas fa-bolt me-2 text-warning"></i>RAYSTORE</h4>
-            <p class="small text-muted m-0" style="font-size: 11px;">Best Gaming Topup Solution</p>
-        </div>
-        <div id="loadingBadge" class="badge rounded-pill bg-dark border border-secondary text-light py-2 px-3">
-            <i class="fas fa-circle-notch fa-spin me-1 text-info"></i> Loading...
-        </div>
+<div class="header d-flex justify-content-between align-items-center">
+    <div>
+        <h3 class="m-0"><i class="fas fa-bolt text-warning me-2"></i>RAYSTORE</h3>
+        <p class="m-0 text-muted" style="font-size: 12px;">Top Up Tercepat & Aman</p>
     </div>
+    <span id="loadingBadge" class="badge bg-dark border border-secondary p-2"><i class="fas fa-sync fa-spin"></i> Load</span>
 </div>
 
-<div class="container mt-3">
-    <div class="nav-scroller mb-4">
-        <ul class="nav nav-pills">
-            <li class="nav-item" onclick="setCat('Games', this)"><a class="nav-link active" href="#"><i class="fas fa-gamepad"></i>Games</a></li>
-            <li class="nav-item" onclick="setCat('Pulsa', this)"><a class="nav-link" href="#"><i class="fas fa-mobile-alt"></i>Pulsa</a></li>
-            <li class="nav-item" onclick="setCat('Data', this)"><a class="nav-link" href="#"><i class="fas fa-wifi"></i>Data</a></li>
-            <li class="nav-item" onclick="setCat('Apps', this)"><a class="nav-link" href="#"><i class="fas fa-gem text-warning"></i>Premium</a></li>
-            <li class="nav-item" onclick="setCat('PLN', this)"><a class="nav-link" href="#"><i class="fas fa-bolt"></i>PLN</a></li>
-        </ul>
+<div class="container">
+    
+    <div class="cat-container">
+        <div class="cat-item active" onclick="setCat('Games', this)"><i class="fas fa-gamepad"></i> Games</div>
+        <div class="cat-item" onclick="setCat('Pulsa', this)"><i class="fas fa-mobile-alt"></i> Pulsa</div>
+        <div class="cat-item" onclick="setCat('Data', this)"><i class="fas fa-wifi"></i> Data</div>
+        <div class="cat-item" onclick="setCat('Apps', this)"><i class="fas fa-crown text-warning"></i> Apps</div>
+        <div class="cat-item" onclick="setCat('PLN', this)"><i class="fas fa-bolt text-warning"></i> PLN</div>
     </div>
 
-    <div class="card p-3 mb-4" style="background: var(--bg-card); border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);">
-        <div class="mb-3">
-            <label class="form-label">PILIH GAME / PROVIDER</label>
-            <div class="input-group-custom">
-                <select id="selProv" onchange="renderItems()">
-                    <option value="">Menunggu Data...</option>
-                </select>
-            </div>
+    <div class="mb-4">
+        <label class="lbl-input ps-2">PILIH LAYANAN</label>
+        <div class="scroll-wrapper" id="provContainer">
+            <div class="text-center py-2 text-muted small w-100">Memuat data...</div>
         </div>
+        <input type="hidden" id="selProv"> 
+    </div>
 
-        <div>
-            <label class="form-label" id="lblTarget">DATA AKUN</label>
-            <div id="boxSingle" class="input-group-custom">
-                <i class="fas fa-user-circle text-muted me-2" style="margin-top: 10px;"></i>
-                <input type="tel" id="valSingle" placeholder="Masukkan Nomor HP / ID Pelanggan">
+    <div class="glass-panel">
+        <div id="dynamicInputArea">
+            <label class="lbl-input" id="lblTarget">USER ID</label>
+            <div id="boxSingle">
+                <input type="text" id="valSingle" class="input-custom" placeholder="Masukkan ID">
             </div>
             
-            <div id="boxDual" class="d-none row g-2">
-                <div class="col-7">
-                    <div class="input-group-custom">
-                        <input type="tel" id="valId" placeholder="User ID">
-                    </div>
-                </div>
-                <div class="col-5">
-                    <div class="input-group-custom">
-                        <input type="tel" id="valZone" placeholder="Zone ID">
-                    </div>
-                </div>
+            <div id="boxDual" class="row g-2 d-none">
+                <div class="col-7"><input type="tel" id="valId" class="input-custom" placeholder="User ID"></div>
+                <div class="col-5"><input type="tel" id="valZone" class="input-custom" placeholder="Zone ID"></div>
             </div>
+            <small id="hintText" class="text-muted d-block mt-2" style="font-size: 10px;">*Pastikan data benar</small>
         </div>
     </div>
 
-    <label class="form-label ms-2">PILIH NOMINAL</label>
-    <div id="areaList" class="row g-2 pb-5">
-        <div class="col-12 text-center py-5">
-            <i class="fas fa-ghost fa-3x text-muted mb-3 opacity-25"></i>
-            <p class="small text-muted">Pilih provider diatas dulu ya bang...</p>
+    <label class="lbl-input ps-2">PILIH ITEM</label>
+    <div id="areaList" class="item-grid mb-5">
+        <div class="text-center text-muted py-5" style="grid-column: span 2;">
+            <i class="fas fa-hand-pointer fa-2x mb-2 opacity-50"></i><br>Pilih layanan di atas dulu
         </div>
     </div>
+
 </div>
 
 <div class="modal fade" id="modalTrx" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-2 shadow-lg" style="border-radius: 24px;">
-            <div class="modal-header border-0 pb-0">
-                <h6 class="modal-title fw-bold text-neon">KONFIRMASI</h6>
-                <button type="button" class="btn-close btn-close-white" onclick="clsModal()"></button>
+        <div class="modal-content text-center p-3">
+            <div class="modal-header border-0 p-0 mb-2">
+                <h6 class="fw-bold text-uppercase w-100">Pembayaran</h6>
             </div> 
-            <div class="modal-body text-center p-3">
-                
+            
+            <div class="modal-body p-0">
                 <div id="v-qris" class="d-none">
-                    <p class="small text-muted mb-1">Total Pembayaran</p>
-                    <h2 class="fw-bold text-white mb-3" id="txtPrice" style="font-family: 'Russo One'">Rp 0</h2>
-                    
-                    <div class="p-2 bg-white rounded-3 d-inline-block shadow mb-3 position-relative">
-                        <img id="imgQr" src="" class="img-fluid rounded" style="max-height: 220px;">
-                        <div class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill">QRIS</div>
+                    <h2 class="fw-bold text-white mb-3" id="txtPrice">Rp 0</h2>
+                    <div class="bg-white p-2 rounded d-inline-block mb-3">
+                        <img id="imgQr" src="" class="img-fluid rounded" style="max-height: 200px;">
                     </div>
-                    
-                    <div class="d-flex justify-content-center align-items-center text-warning small fw-bold mb-3 bg-dark p-2 rounded-pill border border-secondary">
-                        <div class="spinner-grow spinner-grow-sm me-2 text-warning"></div> Menunggu Pembayaran...
+                    <div class="alert alert-dark border border-secondary py-2 small">
+                        <div class="spinner-border spinner-border-sm text-warning me-1"></div> Menunggu scan...
                     </div>
-
-                    <button class="btn btn-outline-danger w-100 rounded-pill py-2" onclick="cancelPay()">
-                        Batalkan
-                    </button>
+                    <button class="btn btn-outline-danger w-100 rounded-pill btn-sm" onclick="cancelPay()">Batalkan</button>
                 </div>
 
                 <div id="v-succ" class="d-none py-2">
-                    <div class="mb-3">
-                        <i class="fas fa-check-circle text-success" style="font-size: 80px; text-shadow: 0 0 20px rgba(25,135,84,0.5);"></i>
-                    </div>
-                    <h4 class="fw-bold text-white">Transaksi Berhasil!</h4>
-                    <p class="small text-muted">Item sedang dikirim ke akunmu.</p>
-                    <div class="bg-dark p-3 rounded-3 text-start border border-secondary mt-3">
-                        <small class="text-muted d-block">SN / Kode Voucher:</small>
-                        <b id="txtSn" class="text-neon" style="letter-spacing: 1px;">-</b>
-                    </div>
-                    <button class="btn btn-primary w-100 rounded-pill mt-4 fw-bold" style="background: var(--gradient-main); border:none;" onclick="clsModal()">Tutup</button>
+                    <i class="fas fa-check-circle text-success fa-4x mb-3"></i>
+                    <h4>Berhasil!</h4>
+                    <p class="small text-muted">Transaksi sukses diproses.</p>
+                    <div class="bg-dark p-2 rounded border border-secondary text-break font-monospace small" id="txtSn"></div>
+                    <button class="btn btn-primary w-100 rounded-pill mt-3" onclick="clsModal()">Tutup</button>
                 </div>
 
                 <div id="v-fail" class="d-none py-2">
-                    <div class="mb-3">
-                        <i class="fas fa-times-circle text-danger" style="font-size: 80px;"></i>
-                    </div>
-                    <h5 class="fw-bold text-white">Gagal</h5>
-                    <p class="small text-danger" id="txtErr">Terjadi kesalahan</p>
-                    <button class="btn btn-outline-secondary w-100 rounded-pill mt-3" onclick="clsModal()">Tutup</button>
+                    <i class="fas fa-times-circle text-danger fa-4x mb-3"></i>
+                    <h4>Gagal</h4>
+                    <p class="small text-danger" id="txtErr">Error</p>
+                    <button class="btn btn-secondary w-100 rounded-pill" onclick="clsModal()">Tutup</button>
                 </div>
-
             </div>
         </div>
     </div>
@@ -260,7 +248,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    // --- LOGIC JS TIDAK DIUBAH (Hanya penyesuaian render HTML) ---
     let db = [];
     let cat = 'Games';
     let timer;
@@ -273,33 +260,60 @@
             if(res.data.status) {
                 db = res.data.data;
                 document.getElementById('loadingBadge').style.display = 'none';
-                popProv();
+                renderProviders(); // Panggil fungsi render baru
             }
         } catch(e) {
-            const badge = document.getElementById('loadingBadge');
-            badge.innerText = 'Offline / Error';
-            badge.className = 'badge bg-danger rounded-pill';
+            document.getElementById('loadingBadge').innerText = 'Error';
+            document.getElementById('loadingBadge').classList.replace('bg-dark', 'bg-danger');
         }
     };
 
     function setCat(c, el) {
         cat = c;
-        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-        if(el) el.querySelector('.nav-link').classList.add('active');
+        // Update Nav Styles
+        document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
         
-        popProv();
-        // Reset tampilan ke status kosong
-        document.getElementById('areaList').innerHTML = `<div class="col-12 text-center py-5"><i class="fas fa-ghost fa-3x text-muted mb-3 opacity-25"></i><p class="small text-muted">Pilih provider diatas dulu ya bang...</p></div>`;
+        // Reset Inputs based on Category (SMART INPUT LOGIC)
+        const lbl = document.getElementById('lblTarget');
+        const inp = document.getElementById('valSingle');
+        const hint = document.getElementById('hintText');
         
         document.getElementById('boxSingle').classList.remove('d-none');
         document.getElementById('boxDual').classList.add('d-none');
+        document.getElementById('selProv').value = ''; // Reset pilihan provider
+        document.getElementById('areaList').innerHTML = '<div class="text-center text-muted py-5" style="grid-column: span 2;">Silakan pilih layanan...</div>';
+
+        if(cat === 'Apps') {
+            lbl.innerText = 'EMAIL / ID AKUN';
+            inp.placeholder = 'contoh: nama@email.com';
+            inp.type = 'email';
+            hint.innerText = '*Pastikan email aktif dan benar';
+        } else if(cat === 'Pulsa' || cat === 'Data') {
+            lbl.innerText = 'NOMOR HANDPHONE';
+            inp.placeholder = '08xxxxxxxxxx';
+            inp.type = 'tel';
+            hint.innerText = '*Gunakan awalan 08';
+        } else if(cat === 'PLN') {
+            lbl.innerText = 'NOMOR METER / ID PEL';
+            inp.placeholder = 'Masukkan Nomor Meter';
+            inp.type = 'tel';
+            hint.innerText = '*Cek ulang nomor meter';
+        } else {
+            lbl.innerText = 'USER ID';
+            inp.placeholder = 'Masukkan User ID';
+            hint.innerText = '*Masukkan ID dengan benar';
+        }
+
+        renderProviders();
     }
 
-    function popProv() {
-        const sel = document.getElementById('selProv');
-        sel.innerHTML = '<option value="">-- Pilih Produk --</option>';
+    // FUNGSI RENDER PROVIDER BARU (PAKAI KARTU/CARD)
+    function renderProviders() {
+        const div = document.getElementById('provContainer');
+        div.innerHTML = '';
+        
         const ps = new Set();
-
         db.forEach(i => {
             if(i.status !== 'available') return;
             const c = (i.category || '').toLowerCase();
@@ -307,6 +321,7 @@
             const brand = i.brand || i.provider || 'Others';
             
             let m = false;
+            // Logic filter yang sama
             if(cat==='Games' && (c.includes('games') || i.type === 'game' || c.includes('voucher'))) m=true;
             else if(cat==='Pulsa' && c.includes('pulsa')) m=true;
             else if(cat==='Data' && (c.includes('data') || c.includes('kuota') || c.includes('internet'))) m=true;
@@ -318,26 +333,62 @@
         });
 
         const sorted = Array.from(ps).sort();
-        if(sorted.length === 0) sel.innerHTML = '<option value="">Produk Kosong</option>';
-        else sorted.forEach(p => sel.innerHTML += `<option value="${p}">${p}</option>`);
+        
+        if(sorted.length === 0) {
+            div.innerHTML = '<div class="text-muted small ps-2">Tidak ada layanan tersedia</div>';
+            return;
+        }
+
+        // Render Cards
+        sorted.forEach(p => {
+            // Tentukan icon sederhana berdasarkan nama (opsional, biar gak polos)
+            let icon = 'fa-gamepad';
+            const pl = p.toLowerCase();
+            if(pl.includes('telkomsel')) icon = 'fa-signal';
+            else if(pl.includes('indosat') || pl.includes('xl')) icon = 'fa-tower-cell';
+            else if(pl.includes('pln')) icon = 'fa-bolt';
+            else if(pl.includes('dana') || pl.includes('gopay')) icon = 'fa-wallet';
+            else if(pl.includes('mobile legends')) icon = 'fa-shield-halved';
+            else if(pl.includes('free fire')) icon = 'fa-crosshairs';
+            else if(pl.includes('google')) icon = 'fa-play';
+            else if(cat === 'Apps') icon = 'fa-film';
+
+            div.innerHTML += `
+            <div class="prov-card" onclick="selectProvider('${p}', this)">
+                <i class="fas ${icon}"></i>
+                <span>${p}</span>
+            </div>`;
+        });
     }
 
-    // --- BAGIAN INI DIMODIF UNTUK TAMPILAN GRID ---
+    // FUNGSI SAAT PROVIDER DI KLIK
+    function selectProvider(val, el) {
+        document.getElementById('selProv').value = val;
+        
+        // Visual Active State
+        document.querySelectorAll('.prov-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+
+        renderItems();
+    }
+
     function renderItems() {
         const prov = document.getElementById('selProv').value;
         const div = document.getElementById('areaList');
         div.innerHTML = '';
         if(!prov) return;
 
+        // Cek Khusus MLBB
         const isML = prov.toLowerCase().includes('mobile legends') || prov.toLowerCase().includes('mlbb');
         if(isML) {
             document.getElementById('boxSingle').classList.add('d-none');
             document.getElementById('boxDual').classList.remove('d-none');
-            document.getElementById('lblTarget').innerText = 'ID PLAYER & ZONE';
+            document.getElementById('lblTarget').innerText = 'USER ID & ZONE';
+            document.getElementById('hintText').innerText = '*Contoh: 12345678 (1234)';
         } else {
             document.getElementById('boxDual').classList.add('d-none');
             document.getElementById('boxSingle').classList.remove('d-none');
-            document.getElementById('lblTarget').innerText = 'NOMOR / AKUN TUJUAN';
+            // Label sudah di set di setCat, jadi aman
         }
 
         const list = db.filter(i => (i.brand === prov || i.provider === prov) && i.status === 'available');
@@ -345,19 +396,12 @@
 
         list.forEach(i => {
             const modal = parseInt(i.price);
-            const sell = Math.ceil((modal + 700) / 0.986);
+            const sell = Math.ceil((modal + 700) / 0.986); // Margin profit
             
-            // RENDERING SEBAGAI GRID (KARTU), BUKAN LIST LAGI
             div.innerHTML += `
-            <div class="col-6 col-md-4 col-lg-3">
-                <div class="prod-card" onclick="pay('${i.code}', '${i.price}')">
-                    <div class="prod-cat">${cat}</div>
-                    <div class="prod-name">${i.name}</div>
-                    <div class="d-flex justify-content-between align-items-end mt-2">
-                        <div class="prod-price">Rp ${sell.toLocaleString('id-ID')}</div>
-                        <i class="fas fa-shopping-cart text-muted" style="font-size:12px"></i>
-                    </div>
-                </div>
+            <div class="item-card" onclick="pay('${i.code}', '${i.price}')">
+                <div class="name-tag">${i.name}</div>
+                <div class="price-tag text-end">Rp ${sell.toLocaleString('id-ID')}</div>
             </div>`;
         });
     }
@@ -369,11 +413,14 @@
         if(prov.includes('mobile legends') || prov.includes('mlbb')) {
             const id = document.getElementById('valId').value;
             const zone = document.getElementById('valZone').value;
-            if(!id || !zone) return Swal.fire({title: 'Ops!', text: 'Isi ID dan Zone dulu!', icon: 'warning', background: '#1a1a2e', color: '#fff'});
+            if(!id || !zone) return Swal.fire({title:'Eits!', text:'ID dan Zone harus diisi', icon:'warning', background:'#1c1917', color:'#fff'});
             target = `${zone}|${id}`;
         } else {
             target = document.getElementById('valSingle').value;
-            if(target.length < 4) return Swal.fire({title: 'Ops!', text: 'Nomor tujuan belum diisi!', icon: 'warning', background: '#1a1a2e', color: '#fff'});
+            let msg = 'Nomor/ID tujuan belum diisi!';
+            if(cat === 'Apps') msg = 'Email/ID belum diisi!';
+            
+            if(target.length < 4) return Swal.fire({title:'Eits!', text:msg, icon:'warning', background:'#1c1917', color:'#fff'});
         }
 
         const m = new bootstrap.Modal(document.getElementById('modalTrx'));
@@ -400,11 +447,11 @@
                 document.getElementById('v-qris').classList.remove('d-none');
                 chk(d.deposit_id);
             } else {
-                Swal.fire({title: 'Gagal', text: res.data.message, icon: 'error', background: '#1a1a2e', color: '#fff'});
+                Swal.fire('Gagal', res.data.message, 'error');
                 clsModal();
             }
         } catch(e) {
-            Swal.fire({title: 'Error', text: 'Server Error', icon: 'error', background: '#1a1a2e', color: '#fff'});
+            Swal.fire('Error', 'Server Error', 'error');
             clsModal();
         }
     }
@@ -414,14 +461,12 @@
         timer = setInterval(async () => {
             try {
                 const res = await axios.post('/api/check-status', { deposit_id: id, meta: metaData });
-                const st = res.data.state;
-
-                if(st === 'success') {
+                if(res.data.state === 'success') {
                     clearInterval(timer);
                     document.getElementById('v-qris').classList.add('d-none');
                     document.getElementById('v-succ').classList.remove('d-none');
                     document.getElementById('txtSn').innerText = res.data.sn;
-                } else if(st === 'failed') {
+                } else if(res.data.state === 'failed') {
                     clearInterval(timer);
                     document.getElementById('v-qris').classList.add('d-none');
                     document.getElementById('v-fail').classList.remove('d-none');
@@ -435,13 +480,7 @@
         if(timer) clearInterval(timer);
         const m = bootstrap.Modal.getInstance(document.getElementById('modalTrx'));
         m.hide();
-        if(currId) {
-            try { await axios.post('/api/cancel-payment', { deposit_id: currId }); } catch(e) {}
-        }
-        Swal.fire({
-            icon: 'info', title: 'Dibatalkan', text: 'Transaksi dibatalkan.', timer: 1500, showConfirmButton: false,
-            background: '#1a1a2e', color: '#fff'
-        });
+        if(currId) { try { await axios.post('/api/cancel-payment', { deposit_id: currId }); } catch(e) {} }
     }
 
     function clsModal() {
