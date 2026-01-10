@@ -3,149 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GameTopup</title>
+    <title>Store Topup</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        :root { --primary: #0284c7; --bg: #f8fafc; }
-        body { background-color: var(--bg); font-family: 'Inter', sans-serif; padding-bottom: 80px; }
-        
-        .header {
-            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-            padding: 20px 20px 60px 20px; color: white; border-radius: 0 0 30px 30px;
-        }
+        :root { --primary: #2563eb; --bg: #f8fafc; }
+        body { background-color: var(--bg); font-family: sans-serif; padding-bottom: 80px; }
+
+        .header { background: var(--primary); color: white; padding: 20px 20px 60px 20px; border-radius: 0 0 25px 25px; }
         
         .main-card {
             background: white; border-radius: 20px; margin: -40px 15px 20px 15px;
-            padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05);
         }
-        
-        /* Menu Grid */
-        .menu-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px; }
-        .menu-item { text-align: center; cursor: pointer; padding: 8px 4px; border-radius: 12px; transition: 0.2s; }
-        .menu-item.active { background: #e0f2fe; }
-        .menu-item.active i { color: var(--primary); }
-        .menu-item.active span { color: var(--primary); font-weight: 700; }
-        .menu-icon { font-size: 20px; margin-bottom: 5px; color: #64748b; }
-        .menu-label { font-size: 10px; font-weight: 600; color: #64748b; display: block; }
 
-        /* Input Styles */
-        .input-group-custom {
+        /* Menu Tabs */
+        .nav-pills .nav-link { 
+            color: #64748b; font-size: 11px; font-weight: 600; 
+            border: 1px solid #f1f5f9; margin-right: 5px; border-radius: 10px;
+        }
+        .nav-pills .nav-link.active { background-color: var(--primary); color: white; border-color: var(--primary); }
+        .nav-pills .nav-link i { display: block; font-size: 18px; margin-bottom: 4px; }
+
+        /* Input Modern */
+        .form-group { margin-bottom: 15px; }
+        .form-label { font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 5px; display: block; }
+        .input-box {
             background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 12px;
-            padding: 10px; display: flex; align-items: center; margin-bottom: 5px;
+            padding: 10px 15px; display: flex; align-items: center;
         }
-        .input-clean { border: none; background: transparent; width: 100%; outline: none; font-weight: 600; font-size: 14px; }
-        .helper-text { font-size: 11px; color: #64748b; margin-bottom: 15px; margin-left: 5px; font-style: italic; }
-
-        /* Provider Select */
-        .prov-select {
-            width: 100%; border: none; background: transparent; font-weight: 700;
-            outline: none; font-size: 15px; color: #334155;
+        .input-box input, .input-box select {
+            border: none; background: transparent; width: 100%; outline: none; font-weight: 600; font-size: 14px;
         }
 
-        /* Product List */
+        /* List Produk */
         .prod-item {
-            background: white; border: 1px solid #e2e8f0; border-radius: 14px;
-            padding: 12px; margin-bottom: 10px; display: flex; align-items: center;
-            cursor: pointer; transition: 0.2s; position: relative; overflow: hidden;
+            background: white; padding: 15px; border-radius: 14px; margin-bottom: 10px;
+            border: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer; transition: 0.2s;
         }
-        .prod-item:hover { border-color: var(--primary); background: #f0f9ff; }
-        .prod-logo { width: 35px; height: 35px; border-radius: 8px; object-fit: cover; margin-right: 12px; }
-        .prod-price { font-size: 15px; font-weight: 700; color: var(--primary); }
-        
-        /* Modal */
-        .modal-content { border-radius: 20px; border: none; }
+        .prod-item:hover { border-color: var(--primary); background: #eff6ff; }
+        .prod-name { font-size: 13px; font-weight: 600; color: #1e293b; }
+        .prod-price { font-size: 14px; font-weight: 700; color: var(--primary); }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div class="d-flex justify-content-between align-items-center">
-        <h4 class="fw-bold m-0"><i class="fas fa-gamepad me-2"></i>GameTopup</h4>
-        <div class="bg-white bg-opacity-20 px-3 py-1 rounded-pill small">
-            <i class="fas fa-bolt"></i> Instant
-        </div>
-    </div>
+    <h4 class="fw-bold m-0">⚡ FastStore</h4>
+    <p class="small opacity-75 m-0">Topup Murah & Otomatis</p>
 </div>
 
 <div class="main-card">
-    <div class="menu-grid">
-        <div class="menu-item active" onclick="setCat('Games', this)">
-            <i class="fas fa-gamepad menu-icon"></i><span class="menu-label">Game</span>
-        </div>
-        <div class="menu-item" onclick="setCat('Pulsa', this)">
-            <i class="fas fa-mobile-alt menu-icon"></i><span class="menu-label">Pulsa</span>
-        </div>
-        <div class="menu-item" onclick="setCat('Data', this)">
-            <i class="fas fa-wifi menu-icon"></i><span class="menu-label">Kuota</span>
-        </div>
-        <div class="menu-item" onclick="setCat('Apps', this)">
-            <i class="fas fa-crown menu-icon text-warning"></i><span class="menu-label">Premium</span>
-        </div>
-        <div class="menu-item" onclick="setCat('PLN', this)">
-            <i class="fas fa-bolt menu-icon"></i><span class="menu-label">PLN</span>
-        </div>
-    </div>
-
-    <label class="small fw-bold text-muted ms-1 mb-1">PILIH PRODUK / GAME</label>
-    <div class="input-group-custom mb-3">
-        <img id="logoProv" src="https://via.placeholder.com/30" class="rounded me-2" style="width:25px; display:none;">
-        <select id="selProv" class="prov-select" onchange="renderUI()">
-            <option value="">Pilih Dulu...</option>
-        </select>
-    </div>
-
-    <label class="small fw-bold text-muted ms-1 mb-1">DATA TUJUAN</label>
     
-    <div id="boxSingle">
-        <div class="input-group-custom">
-            <i class="fas fa-user text-muted me-2" id="iconSingle"></i>
-            <input type="tel" id="valSingle" class="input-clean" placeholder="Nomor HP / ID Game">
+    <ul class="nav nav-pills nav-fill mb-4">
+        <li class="nav-item" onclick="setCat('Games')">
+            <a class="nav-link active" href="#"><i class="fas fa-gamepad"></i>Games</a>
+        </li>
+        <li class="nav-item" onclick="setCat('Pulsa')">
+            <a class="nav-link" href="#"><i class="fas fa-mobile-alt"></i>Pulsa</a>
+        </li>
+        <li class="nav-item" onclick="setCat('Data')">
+            <a class="nav-link" href="#"><i class="fas fa-wifi"></i>Data</a>
+        </li>
+        <li class="nav-item" onclick="setCat('PLN')">
+            <a class="nav-link" href="#"><i class="fas fa-bolt"></i>PLN</a>
+        </li>
+    </ul>
+
+    <div class="form-group">
+        <label class="form-label" id="lblTarget">NOMOR / ID TUJUAN</label>
+        
+        <div id="boxSingle" class="input-box">
+            <input type="tel" id="valSingle" placeholder="Masukkan Nomor / ID">
+        </div>
+
+        <div id="boxDual" class="d-none row g-2">
+            <div class="col-7">
+                <div class="input-box">
+                    <input type="tel" id="valId" placeholder="User ID (cth: 123456)">
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="input-box">
+                    <input type="tel" id="valZone" placeholder="Zone (cth: 2021)">
+                </div>
+            </div>
+        </div>
+        <small class="text-muted d-block mt-1 ms-1" style="font-size: 10px;" id="txtHint">*Pastikan nomor benar</small>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">PILIH PROVIDER</label>
+        <div class="input-box">
+            <select id="selProv" onchange="renderItems()">
+                <option value="">Pilih...</option>
+            </select>
         </div>
     </div>
 
-    <div id="boxDual" class="d-none row g-2">
-        <div class="col-7">
-            <div class="input-group-custom">
-                <input type="tel" id="valId" class="input-clean" placeholder="User ID">
-            </div>
-        </div>
-        <div class="col-5">
-            <div class="input-group-custom">
-                <input type="tel" id="valZone" class="input-clean" placeholder="Zone ID">
-            </div>
-        </div>
-    </div>
-
-    <div id="txtHint" class="helper-text">Pilih produk dulu untuk melihat petunjuk.</div>
-
-    <hr class="opacity-10">
-
-    <div id="areaList">
+    <div id="areaList" class="mt-4">
         <div class="text-center py-5 text-muted opacity-50">
-            <i class="fas fa-box-open fa-3x mb-2"></i>
-            <p class="small">Silakan pilih produk diatas</p>
+            <i class="fas fa-box-open fa-2x mb-2"></i>
+            <p class="small">Pilih provider dulu</p>
         </div>
     </div>
 </div>
 
 <div class="modal fade" id="modalTrx" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-4 text-center">
+        <div class="modal-content p-3 text-center">
             <div class="modal-header border-0 p-0"><button class="btn-close ms-auto" onclick="clsModal()"></button></div>
             <div class="modal-body p-0">
                 
                 <div id="v-qris" class="d-none">
                     <h5 class="fw-bold">Scan QRIS</h5>
-                    <p class="small text-muted mb-0">Total Bayar (Termasuk Fee)</p>
+                    <p class="small text-muted mb-0">Total Bayar</p>
                     <h2 class="text-primary fw-bold" id="txtPrice">Rp 0</h2>
-                    
                     <div class="my-3 border rounded p-2 d-inline-block">
                         <img id="imgQr" src="" class="img-fluid rounded" style="max-height: 250px;">
                     </div>
-                    
                     <div class="alert alert-warning small py-1 fw-bold">
                         <div class="spinner-grow spinner-grow-sm me-1"></div> Menunggu Pembayaran...
                     </div>
@@ -155,11 +133,8 @@
                     <i class="fas fa-check-circle text-success fa-4x mb-3"></i>
                     <h4 class="fw-bold">Berhasil!</h4>
                     <p class="small text-muted">Produk sedang dikirim.</p>
-                    <div class="bg-light p-3 rounded text-start">
-                        <label class="small fw-bold text-muted">SN / BUKTI:</label>
-                        <code class="d-block fs-6 text-dark mt-1" id="txtSn">...</code>
-                    </div>
-                    <button class="btn btn-primary w-100 rounded-pill mt-4" onclick="clsModal()">OK</button>
+                    <div class="bg-light p-2 rounded text-start"><small>SN: <b id="txtSn">-</b></small></div>
+                    <button class="btn btn-primary w-100 rounded-pill mt-3" onclick="clsModal()">OK</button>
                 </div>
 
                 <div id="v-fail" class="d-none py-3">
@@ -184,26 +159,6 @@
     let timer;
     let metaData = {};
 
-    // LOGO DB (Ganti URL sesuai kebutuhan)
-    const logos = {
-        'mobile legends': 'https://play-lh.googleusercontent.com/f7jJ8lJ8LdJ2WcQ-yqCqL8vQ4W_h8vQ_u0Q_5vQ_6vQ_7vQ_8vQ_9vQ_0vQ=s180-rw',
-        'free fire': 'https://play-lh.googleusercontent.com/2s_t_1_6_1_5_1_4_1_3_1_2_1_1_1_0_1_9_1_8_1_7=s180-rw',
-        'pubg': 'https://play-lh.googleusercontent.com/JRd05pyBH41qjgsJuWduRJpTc_0a_b82tUrQ0Q0_5_1_2_1_3_1_4=s180-rw',
-        'pln': 'https://upload.wikimedia.org/wikipedia/commons/9/97/Logo_PLN.png',
-        'telkomsel': 'https://upload.wikimedia.org/wikipedia/commons/b/bc/Telkomsel_2021_icon.svg',
-        'xl': 'https://upload.wikimedia.org/wikipedia/en/5/55/XL_Axiata_2016_logo.svg',
-        'indosat': 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Indosat_Ooredoo_Hutchison.svg'
-    };
-
-    // CONFIG UNTUK HINT & INPUT
-    const inputConfig = {
-        'mobile legends': { type: 'dual', hint: 'Masukkan User ID dan Zone ID secara terpisah.', label: 'ID Game' },
-        'pln': { type: 'single', hint: 'Masukkan Nomor Meter atau ID Pelanggan.', label: 'No. Meter' },
-        'games': { type: 'single', hint: 'Masukkan User ID Game Anda.', label: 'ID Game' },
-        'pulsa': { type: 'single', hint: 'Masukkan Nomor HP (Contoh: 08123xxx).', label: 'Nomor HP' },
-        'default': { type: 'single', hint: 'Masukkan Nomor Tujuan.', label: 'Nomor Tujuan' }
-    };
-
     window.onload = async () => {
         try {
             const res = await axios.get('/api/services');
@@ -214,117 +169,117 @@
         } catch(e) {}
     };
 
-    function setCat(c, el) {
+    function setCat(c) {
         cat = c;
-        document.querySelectorAll('.menu-item').forEach(e => e.classList.remove('active'));
-        el.classList.add('active');
+        document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+        event.target.closest('.nav-link').classList.add('active');
+        
         popProv();
         document.getElementById('areaList').innerHTML = '';
-        document.getElementById('txtHint').innerText = 'Pilih produk diatas.';
+        
+        // Reset Input State
+        document.getElementById('boxSingle').classList.remove('d-none');
+        document.getElementById('boxDual').classList.add('d-none');
+        document.getElementById('txtHint').innerText = '*Pastikan data benar';
     }
 
+    // Logic Populate Provider (Lebih Robust)
     function popProv() {
         const sel = document.getElementById('selProv');
-        sel.innerHTML = '<option value="">Pilih Dulu...</option>';
+        sel.innerHTML = '<option value="">Pilih...</option>';
         const ps = new Set();
 
         db.forEach(i => {
             if(i.status !== 'available') return;
-            const c = i.category ? i.category.toLowerCase() : '';
-            const n = i.name ? i.name.toLowerCase() : '';
-            const t = i.type ? i.type.toLowerCase() : '';
+            // Normalisasi data biar gak error
+            const c = (i.category || '').toLowerCase();
+            const n = (i.name || '').toLowerCase();
+            const t = (i.type || '').toLowerCase();
+            const brand = i.brand || i.provider || 'Others';
+            
             let m = false;
 
-            if(cat==='Games' && (c.includes('games')||t.includes('games'))) m=true;
+            if(cat==='Games' && (c.includes('games') || t.includes('games') || c.includes('voucher'))) m=true;
             else if(cat==='Pulsa' && c.includes('pulsa')) m=true;
-            else if(cat==='Data' && (c.includes('data')||c.includes('kuota'))) m=true;
+            else if(cat==='Data' && (c.includes('data') || c.includes('kuota') || c.includes('internet'))) m=true;
             else if(cat==='PLN' && c.includes('pln')) m=true;
-            else if(cat==='Apps' && (n.includes('netflix')||n.includes('spotify')||n.includes('vidio'))) m=true;
 
-            if(m) ps.add(i.brand || i.provider);
+            if(m) ps.add(brand);
         });
 
-        Array.from(ps).sort().forEach(p => sel.innerHTML += `<option value="${p}">${p}</option>`);
+        // Sortir A-Z biar rapi
+        Array.from(ps).sort().forEach(p => {
+            sel.innerHTML += `<option value="${p}">${p}</option>`;
+        });
     }
 
-    // LOGIC UI UTAMA
+    // Render & Input Detector
     function renderUI() {
-        const prov = document.getElementById('selProv').value.toLowerCase();
-        const areaList = document.getElementById('areaList');
-        areaList.innerHTML = '';
+        const prov = document.getElementById('selProv').value;
+        const div = document.getElementById('areaList');
+        div.innerHTML = '';
+        if(!prov) return;
 
-        // 1. Tampilkan Logo
-        const img = document.getElementById('logoProv');
-        let foundLogo = 'https://via.placeholder.com/30';
-        for(const k in logos) if(prov.includes(k)) foundLogo = logos[k];
-        img.src = foundLogo;
-        img.style.display = 'block';
-
-        // 2. Atur Input (Single vs Dual)
-        const boxSingle = document.getElementById('boxSingle');
-        const boxDual = document.getElementById('boxDual');
-        const hint = document.getElementById('txtHint');
-
-        // Deteksi Tipe Input berdasarkan nama Provider
-        let cfg = inputConfig['default'];
-        if(prov.includes('mobile legends') || prov.includes('mlbb')) cfg = inputConfig['mobile legends'];
-        else if(prov.includes('pln')) cfg = inputConfig['pln'];
-        else if(cat === 'Games') cfg = inputConfig['games'];
-        else if(cat === 'Pulsa' || cat === 'Data') cfg = inputConfig['pulsa'];
-
-        // Terapkan Config
-        hint.innerText = cfg.hint;
-        if(cfg.type === 'dual') {
-            boxSingle.classList.add('d-none');
-            boxDual.classList.remove('d-none');
+        // DETEKSI MLBB
+        const isML = prov.toLowerCase().includes('mobile legends') || prov.toLowerCase().includes('mlbb');
+        
+        if(isML) {
+            document.getElementById('boxSingle').classList.add('d-none');
+            document.getElementById('boxDual').classList.remove('d-none');
+            document.getElementById('lblTarget').innerText = 'ID GAME & ZONE';
+            document.getElementById('txtHint').innerText = '*Masukkan User ID dan Zone ID';
         } else {
-            boxDual.classList.add('d-none');
-            boxSingle.classList.remove('d-none');
+            document.getElementById('boxDual').classList.add('d-none');
+            document.getElementById('boxSingle').classList.remove('d-none');
+            document.getElementById('lblTarget').innerText = 'NOMOR / ID TUJUAN';
+            document.getElementById('txtHint').innerText = '*Pastikan nomor tujuan benar';
         }
 
-        // 3. Render List Produk
-        const rawList = db.filter(i => (i.brand.toLowerCase() === prov || i.provider.toLowerCase() === prov) && i.status === 'available');
-        rawList.sort((a,b) => parseInt(a.price) - parseInt(b.price));
+        // FILTER PRODUK (Loose Filter biar semua masuk)
+        const list = db.filter(i => {
+            const b = i.brand || i.provider;
+            return b === prov && i.status === 'available';
+        });
+        
+        list.sort((a,b) => parseInt(a.price) - parseInt(b.price));
 
-        rawList.forEach(i => {
-            // RUMUS HARGA DISPLAY (Disamakan dengan Backend)
-            // (Modal + 500 + 200) / 0.986
+        list.forEach(i => {
+            // KALKULASI DISPLAY HARGA
             const modal = parseInt(i.price);
+            // (Modal + 500 + 200) / 0.986
             const sell = Math.ceil((modal + 700) / 0.986);
-
-            areaList.innerHTML += `
+            
+            div.innerHTML += `
             <div class="prod-item" onclick="pay('${i.code}', '${i.price}')">
-                <img src="${foundLogo}" class="prod-logo">
-                <div class="flex-grow-1">
-                    <div style="font-size:13px; font-weight:600; line-height:1.2; color:#334155;">${i.name}</div>
-                    <div class="prod-price">Rp ${sell.toLocaleString('id-ID')}</div>
+                <div style="flex:1">
+                    <div class="prod-name">${i.name}</div>
+                    <div class="text-muted small" style="font-size:10px">${i.code}</div>
                 </div>
+                <div class="prod-price">Rp ${sell.toLocaleString('id-ID')}</div>
             </div>`;
         });
     }
 
-    async function pay(code, rawPrice) {
+    async function pay(code, raw) {
         const prov = document.getElementById('selProv').value.toLowerCase();
-        let finalTarget = '';
+        let target = '';
 
-        // LOGIC PENGGABUNGAN ID
+        // LOGIC GABUNG FORMAT TARGET
         if(prov.includes('mobile legends') || prov.includes('mlbb')) {
             const id = document.getElementById('valId').value;
             const zone = document.getElementById('valZone').value;
-            if(!id || !zone) return Swal.fire('Ops', 'ID dan Zone wajib diisi!', 'warning');
+            if(!id || !zone) return Swal.fire('Eits', 'Isi ID dan Zone dulu!', 'warning');
             
-            // USER REQUEST: ZoneID|ID
-            finalTarget = `${zone}|${id}`;
-        
+            // FORMAT: ZONEID|USERID
+            target = `${zone}|${id}`;
         } else {
-            finalTarget = document.getElementById('valSingle').value;
-            if(finalTarget.length < 5) return Swal.fire('Ops', 'Nomor tujuan belum diisi', 'warning');
+            target = document.getElementById('valSingle').value;
+            if(target.length < 4) return Swal.fire('Eits', 'Isi nomor tujuan dulu!', 'warning');
         }
 
         const m = new bootstrap.Modal(document.getElementById('modalTrx'));
         m.show();
         
-        // Reset Views
         document.getElementById('v-qris').classList.add('d-none');
         document.getElementById('v-succ').classList.add('d-none');
         document.getElementById('v-fail').classList.add('d-none');
@@ -332,39 +287,32 @@
         try {
             const res = await axios.post('/api/create-payment', {
                 service_code: code,
-                target: finalTarget,
-                price_original: rawPrice
+                target: target,
+                price_original: raw
             });
 
             if(res.data.status) {
                 const d = res.data.data;
-                metaData = d.meta; // simpan meta data utk check status
-                
+                metaData = d.meta;
                 document.getElementById('imgQr').src = d.qr_image;
                 document.getElementById('txtPrice').innerText = 'Rp ' + d.amount.toLocaleString('id-ID');
                 document.getElementById('v-qris').classList.remove('d-none');
-                
-                checkStatus(d.deposit_id);
+                chk(d.deposit_id);
             } else {
                 Swal.fire('Gagal', res.data.message, 'error');
                 clsModal();
             }
         } catch(e) {
-            Swal.fire('Error', 'Server sibuk', 'error');
+            Swal.fire('Error', 'Server Error', 'error');
             clsModal();
         }
     }
 
-    function checkStatus(depoId) {
+    function chk(id) {
         if(timer) clearInterval(timer);
         timer = setInterval(async () => {
             try {
-                // Kirim meta data balik ke server (Stateless Vercel)
-                const res = await axios.post('/api/check-status', { 
-                    deposit_id: depoId,
-                    meta: metaData 
-                });
-                
+                const res = await axios.post('/api/check-status', { deposit_id: id, meta: metaData });
                 const st = res.data.state;
 
                 if(st === 'success') {
