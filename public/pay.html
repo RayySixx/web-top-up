@@ -5,35 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout Pembayaran</title>
     <style>
-        body { font-family: sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        /* Tampilan dasar card dibuat agak lebih lebar untuk menampung webview */
-        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; transition: all 0.3s ease; }
+        body { 
+            font-family: sans-serif; 
+            background-color: #f4f7f6; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        
+        /* Tampilan Form Awal */
+        .card { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+            width: 100%; 
+            max-width: 350px; 
+            text-align: center; 
+        }
         h2 { color: #333; margin-top: 0; }
         input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        button { width: 100%; background-color: #28a745; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; }
-        button:hover { background-color: #218838; }
+        button.btn-pay { width: 100%; background-color: #28a745; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        button.btn-pay:hover { background-color: #218838; }
         
-        /* Iframe disembunyikan di awal */
-        #payment-frame { width: 100%; height: 550px; border: none; border-radius: 8px; display: none; }
-        #form-container { display: block; }
+        /* CSS untuk Webview Fullscreen */
+        #payment-frame { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 100vh; 
+            border: none; 
+            display: none; 
+            z-index: 999; 
+            background-color: white;
+        }
+        
+        /* Tombol Melayang untuk Kembali/Menutup webview */
+        #btnClose { 
+            position: fixed; 
+            top: 15px; 
+            right: 15px; 
+            background-color: #dc3545; 
+            color: white; 
+            padding: 8px 16px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 14px; 
+            font-weight: bold;
+            display: none; 
+            z-index: 1000; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        #btnClose:hover { background-color: #c82333; }
     </style>
 </head>
 <body>
 
-    <div class="card" id="main-card">
-        <div id="form-container">
-            <h2>Checkout Pembayaran</h2>
-            <p style="font-size: 14px; color: #555;">Masukkan nominal untuk melihat opsi pembayaran.</p>
-            
-            <label for="amount" style="font-size: 14px; font-weight: bold; text-align: left; display: block;">Nominal (Rp):</label>
-            <input type="number" id="amount" placeholder="Contoh: 10000" required>
-            
-            <button id="btnPay" onclick="openWebview()">Buka Pembayaran</button>
-        </div>
+    <button id="btnClose" onclick="closeWebview()">Kembali</button>
 
-        <iframe id="payment-frame" src=""></iframe>
+    <iframe id="payment-frame" src=""></iframe>
+
+    <div class="card" id="form-container">
+        <h2>Checkout</h2>
+        <p style="font-size: 14px; color: #555;">Masukkan nominal pembayaran.</p>
         
-        <button id="btnClose" style="display: none; background-color: #dc3545; margin-top: 15px;" onclick="closeWebview()">Tutup Pembayaran</button>
+        <label for="amount" style="font-size: 14px; font-weight: bold; text-align: left; display: block;">Nominal (Rp):</label>
+        <input type="number" id="amount" placeholder="Contoh: 10000" required>
+        
+        <button class="btn-pay" onclick="openWebview()">Bayar Sekarang</button>
     </div>
 
     <script>
@@ -53,26 +96,26 @@
             // 1. Sembunyikan form input
             document.getElementById("form-container").style.display = "none";
             
-            // 2. Masukkan link Pakasir ke dalam iframe dan tampilkan
+            // 2. Munculkan Iframe Fullscreen dan set link-nya
             const iframe = document.getElementById("payment-frame");
             iframe.src = urlPakasir;
             iframe.style.display = "block";
             
-            // 3. Tampilkan tombol tutup & sesuaikan ukuran kotak
+            // 3. Munculkan tombol "Kembali" melayang
             document.getElementById("btnClose").style.display = "block";
-            document.getElementById("main-card").style.maxWidth = "450px"; 
         }
 
         function closeWebview() {
-            // Kembalikan semua ke posisi awal (menampilkan form lagi)
+            // Tampilkan kembali form awal
             document.getElementById("form-container").style.display = "block";
             
+            // Sembunyikan & reset iframe
             const iframe = document.getElementById("payment-frame");
-            iframe.src = ""; // Kosongkan iframe
+            iframe.src = ""; 
             iframe.style.display = "none";
             
+            // Sembunyikan tombol tutup
             document.getElementById("btnClose").style.display = "none";
-            document.getElementById("main-card").style.maxWidth = "400px";
         }
     </script>
 </body>
